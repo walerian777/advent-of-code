@@ -23,7 +23,7 @@ commonLetters :: [String] -> String
 commonLetters list = head [intersect xs ys | xs <- list, ys <- list, differByOneCharacter xs ys]
 
 differByOneCharacter :: String -> String -> Bool
-differByOneCharacter xs ys = length (xs \\ ys) == 1
+differByOneCharacter xs ys = length (filter (\(xs, ys) -> xs /= ys) $ zip xs ys) == 1
 
 main :: IO ()
 main = do
