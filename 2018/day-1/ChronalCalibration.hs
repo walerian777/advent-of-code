@@ -1,4 +1,7 @@
 -- https://adventofcode.com/2018/day/1
+
+module ChronalCalibration where
+
 import System.Environment
 
 trimPlus :: String -> String
