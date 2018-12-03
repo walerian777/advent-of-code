@@ -3,12 +3,14 @@
 module NoMatterHowYouSliceIt where
 
 import Data.List.Split (splitOneOf)
+import Data.List (find)
 import Data.Ix (range)
 import Data.Map (Map)
 import qualified Data.Map as M
 
 type ID = Int
 type Point = (Int, Int)
+type AreaMap = Map Point Int
 
 data Claim = Claim { id :: ID
                    , position :: Point
@@ -32,11 +34,17 @@ calculateArea (Claim _ (x, y) width height) = range ((x, y), (endX, endY))
   endX = x + width - 1
   endY = y + height - 1
 
-heatMap :: [Claim] -> Map Point Int
-heatMap xs = M.fromListWith (+) [(x, 1) | x <- concatMap calculateArea xs]
+claimedFabric :: [Claim] -> AreaMap
+claimedFabric claims = M.fromListWith (+) [(area, 1) | area <- concatMap calculateArea claims]
 
 countOverlaps :: [Claim] -> Int
-countOverlaps = length . filter (> 1) . M.elems . heatMap
+countOverlaps = length . filter (> 1) . M.elems . claimedFabric
+
+fabricDoesNotOverlap :: AreaMap -> Claim -> Bool
+fabricDoesNotOverlap claimedArea claim = all (\x -> M.lookup x claimedArea == Just 1) (calculateArea claim)
+
+findNotOverlapping :: [Claim] -> Maybe Claim
+findNotOverlapping = find =<< fabricDoesNotOverlap . claimedFabric
 
 readLines :: String -> IO [String]
 readLines = fmap lines . readFile
@@ -45,3 +53,4 @@ main :: IO ()
 main = do
   claims <- fmap (map toClaim) (readLines "input")
   print $ countOverlaps claims
+  print $ findNotOverlapping claims
