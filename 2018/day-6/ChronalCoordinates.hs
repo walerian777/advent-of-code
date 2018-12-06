@@ -53,7 +53,19 @@ largestArea points = maximum (map length coordinates)
   fn :: ([Point] -> Point -> [Point])
   fn = closestPoints points
 
+sumDistances :: [Point] -> Point -> Int
+sumDistances = (sum .) . flip (map . manhattanDistance)
+
+locationsBelowLimit :: Int -> [Point] -> Int
+locationsBelowLimit limit points = length (filter (< limit) distances)
+  where
+  grid :: [Point]
+  grid = generateGrid points
+  distances :: [Int]
+  distances = map (sumDistances points) grid
+
 main :: IO ()
 main = do
   points <- fmap (map toPoint) (readLines "input")
   print $ largestArea points
+  print $ locationsBelowLimit 10000 points
