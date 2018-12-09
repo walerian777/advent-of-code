@@ -1,11 +1,15 @@
 -- https://adventofcode.com/2018/day/7
 
+{-# LANGUAGE TupleSections #-}
+
 module TheSumOfItsParts where
 
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Set (Set)
 import qualified Data.Set as Set
+import Data.Char (ord)
+import Data.List (sort, unfoldr)
 
 type Node = Char
 type Edge = (Node, Node)
@@ -37,7 +41,27 @@ traverseGraph graph = case Map.lookupMin (compact graph) of
   compact :: Graph -> Graph
   compact = Map.filter Set.null
 
+parse :: String -> Map Char (Set Char)
+parse input = Map.fromListWith Set.union $ concat
+  [[(line !! 5, Set.empty), (line !! 36, Set.singleton $ line !! 5)] | line <- lines input]
+
+simultaneousTraverse :: Int -> Int -> Graph -> Int
+simultaneousTraverse workersCount stepDuration = last . unfoldr calculateTime . ([],)
+  where
+  duration :: Node -> Int
+  duration = (+ 1) . subtract (ord 'A') . ord
+  calculateTime :: ([(Int, Node)], Graph) -> Maybe (Int, ([(Int, Node)], Graph))
+  calculateTime ([], graph)
+    | graph == Map.empty = Nothing
+    | otherwise = Just (0, sumTime 0 [] graph)
+  calculateTime ((time, node):done, graph) = Just (time, sumTime time done (Map.map (Set.delete node) (Map.delete node graph)))
+  sumTime :: Int -> [(Int, Node)] -> Graph -> ([(Int, Node)], Graph)
+  sumTime time done graph = (, graph) $ sort $ done ++ take (workersCount - length done)
+    [(time + stepDuration + duration node, node) | (node, nodes) <- Map.assocs graph, notElem node (map snd done), Set.null nodes]
+
 main :: IO ()
 main = do
   edges <- fmap (map extractEdge) (readLines "input")
-  print $ traverseGraph (edgesToGraph edges)
+  let graph = edgesToGraph edges
+  print $ traverseGraph graph
+  print $ simultaneousTraverse 5 60 graph
