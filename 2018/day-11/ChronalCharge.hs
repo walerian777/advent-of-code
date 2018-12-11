@@ -19,11 +19,11 @@ powerLevel (x, y) = hundredsDigit ((rackId * y + serialNumber) * rackId) - 5
   rackId :: Int
   rackId = x + 10
 
+square :: FuelCell -> Int -> [FuelCell]
+square (x, y) z = [(k, l) | k <- [x..x + z], l <- [y..y + z]]
+
 totalPower :: FuelCell -> Int
-totalPower (x, y) = sum (map powerLevel square)
-  where
-  square :: [FuelCell]
-  square = [(k, l) | k <- [x..x + 2], l <- [y..y + 2]]
+totalPower cell = sum (map powerLevel (square cell 2))
 
 largestTotalPower :: FuelCell
 largestTotalPower = maximumBy (comparing totalPower) grid
@@ -31,6 +31,16 @@ largestTotalPower = maximumBy (comparing totalPower) grid
   grid :: [FuelCell]
   grid = [(x, y) | x <- [1..298], y <- [1..298]]
 
+anyTotalPower :: (FuelCell, Int) -> Int
+anyTotalPower (cell, z) = sum (map powerLevel (square cell z))
+
+anyLargestTotalPower :: (FuelCell, Int)
+anyLargestTotalPower = maximumBy (comparing anyTotalPower) grid
+  where
+  grid :: [(FuelCell, Int)]
+  grid = [((x, y), z) | z <- [1..300], x <- [1..300 - z + 1], y <- [1..300 - z + 1]]
+
 main :: IO ()
 main = do
   print $ largestTotalPower
+  print $ anyLargestTotalPower
