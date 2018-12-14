@@ -21,6 +21,7 @@ data Turn = TurnRight | TurnLeft | Straight
 data Cart = Cart { position :: Position
                  , direction :: Direction
                  , turnsCount :: Int
+                 , crashed :: Bool
                  } deriving (Show, Eq)
 
 data Circuit = Circuit { track :: Track
@@ -29,7 +30,7 @@ data Circuit = Circuit { track :: Track
                        } deriving (Show)
 
 instance Ord Cart where
-  compare (Cart (x, y) _ _) (Cart (w, z) _ _)
+  compare (Cart (x, y) _ _ _) (Cart (w, z) _ _ _)
     | x < w = LT
     | x > w = GT
     | y < z = LT
@@ -50,10 +51,10 @@ toCircuit input = Circuit track carts []
   isCart :: Char -> Bool
   isCart x = hasAny "^<>v" [x]
   toCart :: (Position, Char) -> Cart
-  toCart (position, '^') = Cart position North 0
-  toCart (position, '<') = Cart position West 0
-  toCart (position, 'v') = Cart position South 0
-  toCart (position, '>') = Cart position East 0
+  toCart (position, '^') = Cart position North 0 False
+  toCart (position, '<') = Cart position West 0 False
+  toCart (position, 'v') = Cart position South 0 False
+  toCart (position, '>') = Cart position East 0 False
   toTrack :: (Position, Char) -> (Position, Char)
   toTrack (x, '^') = (x, '|')
   toTrack (x, '<') = (x, '-')
@@ -119,21 +120,15 @@ nextMove circuit@(Circuit track ((cart):xs) ys) = circuit { carts = xs, idleCart
   tile :: Maybe Char
   tile = Map.lookup (position cart) track
   newCart :: Cart
-  newCart = case tile of
-    Just '+' -> move (cross cart)
-    Just '/' -> move (turnLeft cart)
-    Just '\\' -> move (turnRight cart)
-    Just '|' -> move cart
-    Just '-' -> move cart
-    Nothing -> cart
-
-firstCrash :: Circuit -> Position
-firstCrash circuit@(Circuit { carts, idleCarts })
-  | isJust crashPosition = fromJust crashPosition
-  | otherwise = firstCrash (nextMove circuit)
-  where
-  crashPosition :: Maybe Position
-  crashPosition = findCrash (carts ++ idleCarts)
+  newCart
+    | crashed cart = cart
+    | otherwise = case tile of
+      Just '+' -> move (cross cart)
+      Just '/' -> move (turnLeft cart)
+      Just '\\' -> move (turnRight cart)
+      Just '|' -> move cart
+      Just '-' -> move cart
+      Nothing -> cart
 
 findCrash :: [Cart] -> Maybe Position
 findCrash carts = case positions \\ uniq positions of
@@ -143,9 +138,35 @@ findCrash carts = case positions \\ uniq positions of
   positions :: [Position]
   positions = map position carts
 
+firstCrash :: Circuit -> Position
+firstCrash circuit@(Circuit { carts, idleCarts })
+  | isJust crashPosition = fromJust crashPosition
+  | otherwise = firstCrash (nextMove circuit)
+  where
+  crashPosition :: Maybe Position
+  crashPosition = findCrash (carts ++ idleCarts)
+
+deathRace :: Circuit -> Position
+deathRace circuit@(Circuit { carts, idleCarts })
+  | length survivors == 1 = position (head survivors)
+  | otherwise = deathRace (nextMove newCircuit)
+  where
+  survivors :: [Cart]
+  survivors = filter (not . crashed) (carts ++ idleCarts)
+  newCircuit :: Circuit
+  newCircuit = circuit { carts = crashedCarts, idleCarts = crashedIdleCarts }
+  collision :: Position
+  collision = case findCrash (carts ++ idleCarts) of
+    Just x -> x
+    Nothing -> (-1, -1)
+  crashedCarts :: [Cart]
+  crashedCarts = filter (not . (==) collision . position) carts
+  crashedIdleCarts :: [Cart]
+  crashedIdleCarts = filter (not . (==) collision . position) idleCarts
+
 main :: IO ()
 main = do
   input <- fmap lines (readFile "input")
   let circuit = toCircuit input
   print $ firstCrash circuit
-  print $ firstCrash circuit
+  print $ deathRace circuit
