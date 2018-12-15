@@ -1,4 +1,4 @@
--- https://adventofcode.com/2018/day/13
+-- https://adventofcode.com/2018/day/14
 
 {-# LANGUAGE ViewPatterns #-}
 
@@ -6,6 +6,7 @@ module ChocolateCharts where
 
 import Data.Sequence (Seq)
 import qualified Data.Sequence as Seq
+import Data.List (isPrefixOf, tails)
 
 type Score = Int
 
@@ -14,8 +15,11 @@ data Board = Board { firstElf :: Int
                    , scores :: Seq Score
                    }
 
-toString :: [Int] -> String
-toString = concat . (map show)
+listToString :: [Int] -> String
+listToString = concat . (map toString)
+
+toString :: Int -> String
+toString = show
 
 recipesCount :: Int
 recipesCount = 990941
@@ -42,11 +46,15 @@ process (Board firstElf secondElf scores) = (Board newFirstElf newSecondElf newS
   newSecondElf = mod (secondElf + y + 1) (length newScoreSeq)
 
 findScore :: String
-findScore = toString ([3, 7] ++ find (Board 0 1 (Seq.fromList [3,7])))
+findScore = listToString ([3, 7] ++ find (Board 0 1 (Seq.fromList [3,7])))
   where
   find :: Board -> [Score]
   find (process->(board, scores)) = scores ++ find board
 
+substr :: String -> String -> Int
+substr = (length .) . (. tails) . takeWhile . (not .) . isPrefixOf
+
 main :: IO ()
 main = do
   print $ take 10 (drop recipesCount findScore)
+  print $ substr (toString recipesCount) findScore
