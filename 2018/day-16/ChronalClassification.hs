@@ -24,11 +24,11 @@ data Opcode = Addr | Addi
             | Eqri | Eqrr
             deriving (Show, Eq)
 
-opcodes :: [Opcode]
-opcodes = [Addr, Addi, Mulr, Muli, Banr, Bani, Borr, Bori, Setr, Seti, Gtir, Gtri, Gtrr, Eqir, Eqri, Eqrr]
+allOpcodes :: [Opcode]
+allOpcodes = [Addr, Addi, Mulr, Muli, Banr, Bani, Borr, Bori, Setr, Seti, Gtir, Gtri, Gtrr, Eqir, Eqri, Eqrr]
 
-ops :: [Register -> Op -> Register]
-ops = pure process <*> opcodes
+readInput :: FilePath -> IO [String]
+readInput = fmap (splitOn "\n\n\n\n") . readFile
 
 toInt :: String -> Int
 toInt = read
@@ -91,15 +91,45 @@ threeOrMoreOpcodes :: [Sample] -> [Sample]
 threeOrMoreOpcodes = filter threeOrMore
   where
   threeOrMore :: Sample -> Bool
-  threeOrMore (Sample before op after) = (length . filter (== after) $ ops <*> pure before <*> pure op) >= 3
+  threeOrMore (Sample x op y) = (length . filter (== y) $ allOps <*> pure x <*> pure op) >= 3
+  allOps :: [Register -> Op -> Register]
+  allOps = pure process <*> allOpcodes
 
 toSamples :: String -> [Sample]
 toSamples input = [Sample (toRegister x) (toOp y) (toRegister z)
-                  | sample <- splitOn "\n\n" (head (splitOn "\n\n\n\n" input))
-                  , let [x, y, z] = lines sample]
+                  | sample <- splitOn "\n\n" input
+                  , let [x, y, z] = lines sample
+                  ]
+
+toTest :: String -> [Op]
+toTest = map toOp . lines
+
+examineSamples :: [Sample] -> [[Opcode]] -> [Register -> Op -> Register]
+examineSamples [] ops = (map process . filterOpcodes) ops
+examineSamples ((Sample before op after):xs) ops = examineSamples xs nextOps
+  where
+  index :: Int
+  index = fst op
+  current :: [Opcode]
+  current = ops !! index
+  filtered :: [Opcode]
+  filtered = filter ((after ==) . flip (flip process before) op) current
+  nextOps :: [[Opcode]]
+  nextOps = (take index ops) ++ (filtered:(drop (index + 1) ops))
+
+calculate :: [Register -> Op -> Register] -> [Op] -> Register -> Register
+calculate _ [] reg = reg
+calculate ops (op:xs) reg = calculate ops xs ((ops !! (fst op)) reg op)
+
+findValue :: [Sample] -> [Op] -> Int
+findValue samples test = value
+  where
+  (value, _, _, _) = calculate (examineSamples samples (replicate 16 allOpcodes)) test (0, 0, 0, 0)
 
 main :: IO ()
 main = do
-  input <- readFile "input"
-  let samples = toSamples input
+  [samplesInput, testInput] <- readInput "input"
+  let samples = toSamples samplesInput
+  let test = toTest testInput
   print $ length (threeOrMoreOpcodes samples)
+  print $ findValue samples test
