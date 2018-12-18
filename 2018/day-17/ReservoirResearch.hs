@@ -4,7 +4,7 @@
 module ReservoirResearch where
 
 import Data.List.Split (splitOn)
-import Data.Array.IArray (Array, IArray, Ix, bounds, accumArray, elems, rangeSize)
+import Data.Array.IArray (Array, accumArray, elems)
 import Data.Array.ST (MArray, getBounds, thaw, readArray, runSTArray, writeArray)
 import Data.Semigroup (Max(Max), Min(Min), sconcat)
 import Data.Maybe (fromMaybe, listToMaybe, maybeToList)
@@ -39,10 +39,10 @@ toGrid :: [String] -> Grid
 toGrid = toTiles . (toCoordinate =<<)
 
 toTiles :: [Coordinate] -> Grid
-toTiles xs = accumArray (flip const) Sand ((minY, minX), (maxY, maxX)) $ (, Clay) <$> xs
+toTiles xs = accumArray (flip const) Sand ((minY, minX), (maxY, maxX)) ((, Clay) <$> xs)
   where
   ((Min minY, Min minX), (Max maxY, Max maxX)) = case nonEmpty xs of
-    Just xs' -> sconcat $ ((Min *** Min . pred) &&& (Max *** Max . succ)) <$> xs'
+    Just xs' -> sconcat (((Min *** Min . pred) &&& (Max *** Max . succ)) <$> xs')
 
 ranges :: [Int] -> [Coordinate]
 ranges = ranges' Nothing
@@ -84,15 +84,19 @@ start scene = do
           sequence_ [writeArray scene (y, x) Clay | x <- [x0..x1]]
           clayTilesL <- fill y (l, x0 - 1)
           clayTilesR <- fill y (x1 + 1, r)
-          let clayTiles'@(bool FlowingWater StagnantWater -> elt) = clayTilesL && clayTilesR
-          clayTiles' <$ sequence_ [writeArray scene (y, x) elt | x <- [l..r]]
+          let clayTiles'@(bool FlowingWater StagnantWater -> tile) = clayTilesL && clayTilesR
+          clayTiles' <$ sequence_ [writeArray scene (y, x) tile | x <- [l..r]]
   flow minY (500, 500)
 
 filterWaterTiles :: Grid -> [Tile]
 filterWaterTiles = filter (`elem` [StagnantWater, FlowingWater]) . elems
 
+filterStagnantTiles :: Grid -> [Tile]
+filterStagnantTiles = filter (== StagnantWater) . elems
+
 main :: IO ()
 main = do
   input <- fmap lines (readFile "input")
-  let grid = runSTArray $ thaw (toGrid input) >>= (\x -> x <$ start x)
+  let grid = runSTArray (thaw (toGrid input) >>= (\x -> x <$ start x))
   print $ length (filterWaterTiles grid)
+  print $ length (filterStagnantTiles grid)
