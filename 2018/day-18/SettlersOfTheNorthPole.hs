@@ -1,67 +1,73 @@
 -- https://adventofcode.com/2018/day/18
 
+{-# LANGUAGE FlexibleContexts #-}
+
 module SettlersOfTheNorthPole where
 
-import Data.List (find)
-import Data.Maybe (maybeToList)
-import Control.Monad (ap)
+import Data.Array.Unboxed (IArray, UArray, (!), (//), assocs, elems, listArray)
+import Data.Map.Strict (empty, insertLookupWithKey)
 
 type Coordinate = (Int, Int)
-type Acre = (Coordinate, AcreType)
-type Area = [Acre]
+type Acre = (Coordinate, Char)
 
-data AcreType = Ground | Tree | Lumberyard
-  deriving (Show, Eq)
+toArea :: [String] -> UArray Coordinate Char
+toArea input = listArray ((0, 0), (49, 49)) (concat input)
 
-toArea :: [String] -> Area
-toArea input = zip grid (map toAcre (concat input))
-  where
-  grid = [(x, y) | x <- [0..49], y <- [0..49]] :: [Coordinate]
+ground = '.' :: Char
+tree = '|' :: Char
+lumberyard = '#' :: Char
 
-toAcre :: Char -> AcreType
-toAcre '.' = Ground
-toAcre '|' = Tree
-toAcre '#' = Lumberyard
-
-morph :: Acre -> Area -> Acre
-morph acre@(coord, acreType) surrounding
-  | acreType == Ground
-    && scanArea surrounding Tree >= 3 = (coord, Tree)
-  | acreType == Tree
-    && scanArea surrounding Lumberyard >= 3 = (coord, Lumberyard)
-  | acreType == Lumberyard
-    && scanArea surrounding Tree >= 1
-    && scanArea surrounding Lumberyard >= 1 = (coord, Lumberyard)
-  | acreType == Lumberyard = (coord, Ground)
+morph :: (IArray a Char) => Acre -> a Coordinate Char -> Acre
+morph acre@(coord, acreType) area
+  | acreType == ground
+    && scanArea surrounding tree >= 3 = (coord, tree)
+  | acreType == tree
+    && scanArea surrounding lumberyard >= 3 = (coord, lumberyard)
+  | acreType == lumberyard
+    && scanArea surrounding tree >= 1
+    && scanArea surrounding lumberyard >= 1 = (coord, lumberyard)
+  | acreType == lumberyard = (coord, ground)
   | otherwise = acre
+    where
+    surrounding = (area !) <$> (neighbours coord)
+    neighbours :: Coordinate -> [Coordinate]
+    neighbours (x, y) = [(k, l)
+                        | k <- [x - 1 .. x + 1]
+                        , l <- [y - 1 .. y + 1]
+                        , (k, l) /= (x, y)
+                        , k >= 0, l >= 0
+                        , k < 50, l < 50
+                        ]
 
-scanArea :: Area -> AcreType -> Int
-scanArea area acreType = length (filter ((== acreType) . snd) area)
+scanArea :: [Char]-> Char -> Int
+scanArea area acreType = length (filter (== acreType) area)
 
-epoch :: Area -> Area
-epoch area = map (ap morph surrounding) area
-  where
-  surrounding :: Acre -> [Acre]
-  surrounding (coord, _)  = map findAcre (neighbours coord)
-  neighbours :: Coordinate -> [Coordinate]
-  neighbours (x, y) = [(k, l)
-                      | k <- [x - 1 .. x + 1]
-                      , l <- [y - 1 .. y + 1]
-                      , (k, l) /= (x, y)
-                      ]
-  findAcre :: Coordinate -> Acre
-  findAcre coord = case find ((== coord) . fst) area of
-    Just acre -> acre
-    Nothing -> (coord, Ground)
+epoch :: (IArray a Char) => a Coordinate Char -> a Coordinate Char
+epoch area = area // do
+    acre@(coords, current) <- assocs area
+    let acreType = snd $ morph acre area
+    return (coords, acreType)
 
-resourceValue :: Area -> Int
+resourceValue :: (IArray a Char) => a Coordinate Char -> Int
 resourceValue area = trees * lumberyards
   where
-  trees = scanArea area Tree :: Int
-  lumberyards =  scanArea area Lumberyard :: Int
+  trees = scanArea (elems area) tree :: Int
+  lumberyards =  scanArea (elems area) lumberyard :: Int
+
+loopedEpoch :: (IArray a Char, Ord (a Coordinate Char)) =>
+  Int -> a Coordinate Char -> a Coordinate Char
+loopedEpoch minutes area = iterate empty 0 minutes area
+  where
+  iterate lookup done epochs nextArea
+    | done == epochs = nextArea
+    | otherwise = iterate lookup' (done + 1) epochs' $ epoch nextArea
+      where
+      (hit, lookup') = insertLookupWithKey (const (const id)) nextArea done lookup
+      epochs' = maybe minutes (((done + 1) +) . ((epochs - done - 1) `mod`) . (-) done) hit
 
 main :: IO ()
 main = do
   input <- fmap lines (readFile "input")
   let area = toArea input
-  print $ resourceValue (iterate epoch area !! 10)
+  print $ resourceValue (loopedEpoch 10 area)
+  print $ resourceValue (loopedEpoch 1000000000 area)
