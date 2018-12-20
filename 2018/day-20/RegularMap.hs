@@ -6,6 +6,7 @@ import Data.Map (Map, notMember, (!), insert, elems)
 import qualified Data.Map.Strict as Map
 import Data.Stack
 import Data.Bool (bool)
+import Data.List (filter)
 
 type Coordinate = (Int, Int)
 type Distance = Int
@@ -48,3 +49,4 @@ main = do
   let directions = toDirections input
   let grid = generateGrid directions
   print $ maximum (elems grid)
+  print $ length (filter (>= 1000) (elems grid))
