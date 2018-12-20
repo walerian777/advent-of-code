@@ -101,9 +101,14 @@ execute (ip, ops) register
   nextRegister :: Register
   nextRegister = adjust' (+ 1) ip (process (index ops regIndex) register)
 
+optimizedExecute :: Int -> Int
+optimizedExecute n = sum [x | x <- [1..n], mod n x == 0]
+
 main :: IO ()
 main = do
   input <- fmap lines (readFile "input")
   let program = toProgram input
-  let register = fromList [0, 0, 0, 0, 0, 0]
-  print $ index (execute program register) 0
+  let register = fromList [1, 0, 0, 0, 0, 0]
+  -- print $ index (execute program register) 0
+  print $ optimizedExecute 948 -- optimized version of the above execution
+  print $ optimizedExecute 10551348
