@@ -10,6 +10,8 @@ import Data.Maybe (fromJust)
 import Data.Bits ((.&.), (.|.))
 import Data.Bool (bool)
 import Debug.Trace
+import Data.Set (Set)
+import qualified Data.Set as Set
 
 type Elements = (Int, Int, Int)
 type Op = (Opcode, Elements)
@@ -104,9 +106,34 @@ execute (ip, ops) register
     | regIndex == 28 = adjust' (+ 1) ip (process (index ops regIndex) register)
     | otherwise = adjust' (+ 1) ip (process (index ops regIndex) register)
 
+
+uniqueExecute :: Program -> Register -> Set Int -> Register
+uniqueExecute (ip, ops) register set
+  | regIndex == 28 && Set.member targetValue set
+    = fail $ "Duplicate found: " ++ show targetValue ++ "\n Register: " ++ show register
+  | length ops > regIndex = uniqueExecute (ip, ops) nextRegister nextSet
+  | otherwise = register
+  where
+  regIndex :: Int
+  regIndex = index register ip
+  nextRegister :: Register
+  nextRegister
+    | regIndex == 28 = adjust' (+ 1) ip (process (index ops regIndex) register)
+    | otherwise = adjust' (+ 1) ip (process (index ops regIndex) register)
+  targetValue :: Int
+  targetValue = (index nextRegister 3)
+  nextSet :: Set Int
+  nextSet
+    | regIndex == 28 = Set.insert targetValue set
+    | otherwise = set
+
+trace'' x = trace ("Set :" ++ show x) x
+trace' x = traceShow (index x 3) x
+
 main :: IO ()
 main = do
   input <- fmap lines (readFile "input")
   let program = toProgram input
   let register = fromList [0, 0, 0, 0, 0, 0]
   print $ execute program register
+  print $ uniqueExecute program register Set.empty
