@@ -5,9 +5,9 @@ module ImmuneSystemSimulator where
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Control.Arrow ((&&&))
-import Data.List (foldl', mapAccumL, sortOn)
+import Data.List (foldl', mapAccumL, sortOn, find)
 import Data.Map.Strict (alter, assocs, fromList)
-import Data.Maybe (catMaybes, listToMaybe)
+import Data.Maybe (catMaybes, listToMaybe, fromJust)
 import Data.Ord (Down(..))
 import Data.Set (Set, empty, insert, member, notMember)
 import GHC.Exts (sortWith)
@@ -121,7 +121,7 @@ round groups = assocs (foldl' attack (fromList groups) attacks)
   where
   attacks = map snd $ sortOn (Down . fst) $ catMaybes $ snd $ mapAccumL buildAttack empty
     [ (key, effectivePower, attackType, initiative)
-    | (key, Group {count, attackPoints, attackType, initiative}) <- groups
+    | (key, Group { count, attackPoints, attackType, initiative }) <- groups
     , let effectivePower = count * attackPoints
     , then sortWith by Down (effectivePower, initiative)
     ]
@@ -136,12 +136,12 @@ round groups = assocs (foldl' attack (fromList groups) attacks)
       , let damage = (if elem srcType weak then 2 else 1) * effectivePower
       , then sortWith by Down (damage, count * attackPoints, initiative)
       ]
-  attack groups' (src, dst)
-    | Just Group {count, attackPoints, attackType} <- Map.lookup src groups'
-    = alter (strike attackType (count * attackPoints)) dst groups'
+  attack groups' (attacker, defender)
+    | Just Group { count, attackPoints, attackType } <- Map.lookup attacker groups'
+    = alter (strike attackType (count * attackPoints)) defender groups'
     | otherwise = groups'
-  strike attackType effectivePower (Just dst@Group {count, hitPoints, weak})
-    | count > killed = Just dst {count = count - killed}
+  strike attackType effectivePower (Just defender@Group { count, hitPoints, weak })
+    | count > killed = Just defender {count = count - killed}
     | otherwise = Nothing
     where killed = (if elem attackType weak then 2 else 1) * div effectivePower hitPoints
 
@@ -152,11 +152,22 @@ fight' :: Set [(Side, Int, Int)] -> Reindeer -> Reindeer
 fight' seen groups
   | member key seen = groups
   | otherwise = fight' (insert key seen) (round groups)
-  where key = [(side, n, count) | (Key {side, n}, Group {count}) <- groups]
+  where key = [(side, n, count) | (Key { side, n }, Group { count }) <- groups]
 
 countSurvivors :: Reindeer -> Int
 countSurvivors = sum . fmap (count . snd)
 
+boostedFight :: Reindeer -> Maybe Reindeer
+boostedFight groups
+  = find (all $ (== ImmuneSystem) . side . fst)
+    [ fight
+        [ (k, if side == ImmuneSystem then group { attackPoints = attackPoints + boost } else group)
+        | (k@Key { side }, group@Group { attackPoints }) <- groups
+        ]
+    | boost <- [0..]
+    ]
+
 main :: IO ()
 main = do
   print $ countSurvivors (fight groups)
+  print $ countSurvivors (fromJust (boostedFight groups))
