@@ -18,3 +18,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Crossed Wires](https://adventofcode.com/2019/day/3)
 * Solution: [`crossed_wires.ex`](day-03/crossed_wires.ex)
 * Language: Elixir
+
+### Day 4
+* Puzzle: [Secure Container](https://adventofcode.com/2019/day/4)
+* Solution: [`secure_container.pl`](day-03/secure_container.pl)
+* Language: Prolog
