@@ -7,6 +7,10 @@
 #define MULTIPLY_INSTRUCTION 2
 #define INPUT_INSTRUCTION 3
 #define OUTPUT_INSTRUCTION 4
+#define JUMP_IF_TRUE_INSTRUCTION 5
+#define JUMP_IF_FALSE_INSTRUCTION 6
+#define LESS_THAN_INSTRUCTION 7
+#define EQUALS_INSTRUCTION 8
 #define HALT_INSTRUCTION 99
 
 #define POSITION_MODE 0
@@ -22,7 +26,7 @@ int main() {
     fscanf(inputFile, "%d,", &memory[i]);
   }
 
-  int instruction, instructionPointer, instructionOffset, opcode;
+  int instruction, instructionPointer, opcode;
   int firstParameterMode, secondParameterMode, resultParameterMode;
   int firstParameter, secondParameter, resultParameter;
   int input, output;
@@ -44,22 +48,38 @@ int main() {
 
     if (opcode == ADD_INSTRUCTION) {
       memory[resultParameter] = memory[firstParameter] + memory[secondParameter];
-      instructionOffset = 4;
+      instructionPointer += 4;
     } else if (opcode == MULTIPLY_INSTRUCTION) {
       memory[resultParameter] = memory[firstParameter] * memory[secondParameter];
-      instructionOffset = 4;
+      instructionPointer += 4;
     } else if (opcode == INPUT_INSTRUCTION) {
       printf("Provide the ID of the system to test: ");
       fscanf(stdin, "%d", &input);
       memory[firstParameter] = input;
-      instructionOffset = 2;
+      instructionPointer += 2;
     } else if (opcode == OUTPUT_INSTRUCTION) {
       output = memory[firstParameter];
       printf("Diagnostic code: %d\n", output);
-      instructionOffset = 2;
+      instructionPointer += 2;
+    } else if (opcode == JUMP_IF_TRUE_INSTRUCTION) {
+      if (memory[firstParameter] != 0) {
+        instructionPointer = memory[secondParameter];
+      } else {
+        instructionPointer += 3;
+      };
+    } else if (opcode == JUMP_IF_TRUE_INSTRUCTION) {
+      if (memory[firstParameter] == 0) {
+        instructionPointer = memory[secondParameter];
+      } else {
+        instructionPointer += 3;
+      };
+    } else if (opcode == LESS_THAN_INSTRUCTION) {
+      memory[resultParameter] = memory[firstParameter] < memory[secondParameter];
+      instructionPointer += 4;
+    } else if (opcode == EQUALS_INSTRUCTION) {
+      memory[resultParameter] = memory[firstParameter] == memory[secondParameter];
+      instructionPointer += 4;
     };
-
-    instructionPointer += instructionOffset;
   }
 
   return 0;
