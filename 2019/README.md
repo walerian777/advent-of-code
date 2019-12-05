@@ -21,5 +21,10 @@ Preferably a different language every day - with an exception for follow-up puzz
 
 ### Day 4
 * Puzzle: [Secure Container](https://adventofcode.com/2019/day/4)
-* Solution: [`secure_container.pl`](day-03/secure_container.pl)
+* Solution: [`secure_container.pl`](day-04/secure_container.pl)
 * Language: Prolog
+
+### Day 5
+* Puzzle: [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5)
+* Solution: [`sunny_with_a_chance_of_asteroids.c`](day-05/sunny_with_a_chance_of_asteroids.c)
+* Language: C
