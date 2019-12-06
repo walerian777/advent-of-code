@@ -24,6 +24,30 @@
   (reduce + (map #(count-orbits % orbit-graph) (keys orbit-graph))))
 
 (println
+  ;; Part 1
   (sum-all-orbits
      (graph
        (prepare-map input))))
+
+(defn lazy-contains? [collection key]
+    (some #{key} collection))
+
+(defn traverse-orbits [object orbit-graph]
+  (if (contains? orbit-graph object)
+    (concat [object] (traverse-orbits (orbit-graph object) orbit-graph))
+    []))
+
+(defn orbit-travels-to-santa [orbit-graph]
+  (concat
+    (remove #(lazy-contains? (traverse-orbits "SAN" orbit-graph) %)
+            (traverse-orbits "YOU" orbit-graph))
+    (remove #(lazy-contains? (traverse-orbits "YOU" orbit-graph) %)
+            (traverse-orbits "SAN" orbit-graph))
+    ))
+
+(println
+  ;; Part 2
+  (count
+    (orbit-travels-to-santa
+      (graph
+        (prepare-map input)))))
