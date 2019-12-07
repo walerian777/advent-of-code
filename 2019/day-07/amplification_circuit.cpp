@@ -67,7 +67,7 @@ int executeProgram(int *memory, int *inputInstructions) {
   int inputInstructionsPointer = 0;
   int outputSignal;
 
-  while (opcode != HALT_INSTRUCTION) {
+  while (instructionPointer < INPUT_SIZE) {
     instruction = memory[instructionPointer];
     parsedInstruction = parseInstruction(instruction);
 
@@ -88,6 +88,8 @@ int executeProgram(int *memory, int *inputInstructions) {
     } else if (opcode == OUTPUT_INSTRUCTION) {
       outputSignal = memory[firstParameter];
       instructionPointer += 2;
+
+      return outputSignal;
     } else if (opcode == JUMP_IF_TRUE_INSTRUCTION) {
       if (memory[firstParameter] != 0) {
         instructionPointer = memory[secondParameter];
@@ -106,10 +108,12 @@ int executeProgram(int *memory, int *inputInstructions) {
     } else if (opcode == EQUALS_INSTRUCTION) {
       memory[resultParameter] = memory[firstParameter] == memory[secondParameter];
       instructionPointer += 4;
+    } else if (opcode == HALT_INSTRUCTION) {
+      return 0;
     };
   }
 
-  return outputSignal;
+  return 0;
 }
 
 int main() {
@@ -122,6 +126,7 @@ int main() {
     fscanf(inputFile, "%d,", &memory[i]);
   }
 
+  // Part 1
   int highestSignal = 0;
   int outputSignal = 0;
   int settingSequence[5] = {0, 1, 2, 3, 4};
@@ -139,6 +144,32 @@ int main() {
   } while (std::next_permutation(settingSequence, settingSequence + 5));
 
   printf("Highest signal: %d", highestSignal);
+
+  // Part 2
+  highestSignal = 0;
+  int feedbackSettingSequence[5] = {5, 6, 7, 8, 9};
+
+  do {
+    outputSignal = 0;
+
+    int *workingMemory[5] = {copyMemory(memory), copyMemory(memory), copyMemory(memory), copyMemory(memory), copyMemory(memory)};
+
+    while(true) {
+      outputSignal = executeProgram(workingMemory[0], inputInstructions(feedbackSettingSequence[0], outputSignal));
+      outputSignal = executeProgram(workingMemory[1], inputInstructions(feedbackSettingSequence[1], outputSignal));
+      outputSignal = executeProgram(workingMemory[2], inputInstructions(feedbackSettingSequence[2], outputSignal));
+      outputSignal = executeProgram(workingMemory[3], inputInstructions(feedbackSettingSequence[3], outputSignal));
+      outputSignal = executeProgram(workingMemory[4], inputInstructions(feedbackSettingSequence[4], outputSignal));
+
+      if (outputSignal == 0) break;
+    }
+
+    if(outputSignal > highestSignal) {
+      highestSignal = outputSignal;
+    }
+  } while (std::next_permutation(feedbackSettingSequence, feedbackSettingSequence + 5));
+
+  printf("Highest signal with feedback loop: %d", highestSignal);
 
   return 0;
 }
