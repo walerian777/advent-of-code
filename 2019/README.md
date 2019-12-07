@@ -33,3 +33,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Universal Orbit Map](https://adventofcode.com/2019/day/6)
 * Solution: [`universal_orbit_map.clj`](day-06/universal_orbit_map.clj)
 * Language: Clojure
+
+### Day 7
+* Puzzle: [Amplification Circuit](https://adventofcode.com/2019/day/7)
+* Solution: [`amplification_circuit.cpp`](day-07/amplification_circuit.cpp)
+* Language: C++
