@@ -38,3 +38,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Amplification Circuit](https://adventofcode.com/2019/day/7)
 * Solution: [`amplification_circuit.cpp`](day-07/amplification_circuit.cpp)
 * Language: C++
+
+### Day 8
+* Puzzle: [Space Image Format](https://adventofcode.com/2019/day/8)
+* Solution: [`SpaceImageFormat.swift`](day-08/SpaceImageFormat.swift)
+* Language: Swift
