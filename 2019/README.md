@@ -12,7 +12,7 @@ Preferably a different language every day - with an exception for follow-up puzz
 ### Day 2
 * Puzzle: [1202 Program Alarm](https://adventofcode.com/2019/day/2)
 * Solution: [`1202_program_alarm.c`](day-02/1202_program_alarm.c)
-* Language: C (Intcode)
+* Language: C
 
 ### Day 3
 * Puzzle: [Crossed Wires](https://adventofcode.com/2019/day/3)
@@ -26,8 +26,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 
 ### Day 5
 * Puzzle: [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5)
-* Solution: [`sunny_with_a_chance_of_asteroids.c`](day-05/sunny_with_a_chance_of_asteroids.c)
-* Language: C (Intcode)
+* Solution: [`sunny_with_a_chance_of_asteroids.m`](day-05/sunny_with_a_chance_of_asteroids.m)
+* Language: Objective-C
 
 ### Day 6
 * Puzzle: [Universal Orbit Map](https://adventofcode.com/2019/day/6)
