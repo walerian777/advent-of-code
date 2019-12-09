@@ -43,3 +43,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Space Image Format](https://adventofcode.com/2019/day/8)
 * Solution: [`SpaceImageFormat.swift`](day-08/SpaceImageFormat.swift)
 * Language: Swift
+
+### Day 9
+* Puzzle: [Sensor Boost](https://adventofcode.com/2019/day/9)
+* Solution: [`sensor_boost.rs`](day-09/sensor_boost.rs)
+* Language: Rust
