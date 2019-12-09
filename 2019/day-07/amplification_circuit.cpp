@@ -96,7 +96,7 @@ int executeProgram(int *memory, int *inputInstructions) {
       } else {
         instructionPointer += 3;
       };
-    } else if (opcode == JUMP_IF_TRUE_INSTRUCTION) {
+    } else if (opcode == JUMP_IF_FALSE_INSTRUCTION) {
       if (memory[firstParameter] == 0) {
         instructionPointer = memory[secondParameter];
       } else {
