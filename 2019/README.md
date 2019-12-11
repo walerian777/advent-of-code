@@ -48,3 +48,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Sensor Boost](https://adventofcode.com/2019/day/9)
 * Solution: [`sensor_boost.rs`](day-09/sensor_boost.rs)
 * Language: Rust
+
+### Day 10
+* Puzzle: [Monitoring Station](https://adventofcode.com/2019/day/10)
+* Solution: [`monitoring-station.go`](day-10/monitoring-station.go)
+* Language: Go
