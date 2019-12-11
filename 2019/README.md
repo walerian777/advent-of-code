@@ -53,3 +53,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Monitoring Station](https://adventofcode.com/2019/day/10)
 * Solution: [`monitoring-station.go`](day-10/monitoring-station.go)
 * Language: Go
+
+### Day 11
+* Puzzle: [Space Police](https://adventofcode.com/2019/day/11)
+* Solution: [`SpacePolice.java`](day-11/SpacePolice.java)
+* Language: Java

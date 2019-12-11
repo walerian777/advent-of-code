@@ -57,17 +57,14 @@ fn main() {
                 }
             },
             7 => {
-                // getValue(a)<getValue(b) ? data[c]=1 : data[c]=0
                 memory[result_param as usize] = (memory[first_param as usize] < memory[second_param as usize]) as i64;
                 instruction_pointer += 4;
             },
             8 => {
-                // getValue(a)==getValue(b) ? data[c] = 1 : data[c] = 0;
-                memory[result_param as usize] = (memory[first_param as usize] < memory[second_param as usize]) as i64;
+                memory[result_param as usize] = (memory[first_param as usize] == memory[second_param as usize]) as i64;
                 instruction_pointer += 4;
             },
             9 => {
-                // relativeBase += getValue(a);
                 relative_base += memory[first_param as usize];
                 instruction_pointer += 2;
             },
