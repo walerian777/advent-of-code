@@ -180,6 +180,8 @@ public class SpacePolice {
     }
 
     System.out.println(visitedPanels.size());
+
+    renderIdentifier(visitedPanels);
   }
 
   private static ArrayList<Integer> loadInput() {
@@ -209,13 +211,13 @@ public class SpacePolice {
 
     switch (direction) {
       case 0:
-        y--;
+        y++;
         break;
       case 1:
         x++;
         break;
       case 2:
-        y++;
+        y--;
         break;
       case 3:
         x--;
@@ -223,5 +225,29 @@ public class SpacePolice {
     }
 
     return new Coordinate(x, y);
+  }
+
+  private static void renderIdentifier(ArrayList<Panel> panels) {
+    int upperBoundary = panels.stream().mapToInt(panel -> panel.coordinate.y).max().getAsInt();
+    int rightBoundary = panels.stream().mapToInt(panel -> panel.coordinate.x).max().getAsInt();
+    int bottomBoundary = panels.stream().mapToInt(panel -> panel.coordinate.y).min().getAsInt();
+    int leftBoundary = panels.stream().mapToInt(panel -> panel.coordinate.x).min().getAsInt();
+
+    for(int y = upperBoundary; y >= bottomBoundary; y--) {
+      for (int x = leftBoundary; x <= rightBoundary; x++) {
+        final int cx = x;
+        final int cy = y;
+        Panel foundPanel = panels.stream().filter(panel -> panel.coordinate.x == cx && panel.coordinate.y == cy)
+          .findAny()
+          .orElse(new Panel(0, 0, 0));
+        if (foundPanel.color == 0) {
+          System.out.print("⬜️");
+        } else {
+          System.out.print("⬛️");
+        }
+      }
+      System.out.println();
+    }
+
   }
 }
