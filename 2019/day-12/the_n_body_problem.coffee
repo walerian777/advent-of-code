@@ -9,6 +9,12 @@ INPUT = [
 
 STEPS = 1000
 
+GCD = (a, b) ->
+  if a == 0 then b else GCD(b % a, a)
+
+LCM = (a, b) ->
+  (a * b) / GCD(a, b)
+
 class Moon
   @ID = 0
 
@@ -44,7 +50,6 @@ class Moon
     for moon in moons
       moon.move()
 
-
 part1 = ->
   moons = INPUT.map (position) -> new Moon(...position)
   step = 0
@@ -55,4 +60,33 @@ part1 = ->
 
   moons.reduce(((acc, moon) -> acc + moon.energy()), 0)
 
+part2 = ->
+  moons = INPUT.map (position) -> new Moon(...position)
+  step = 0
+  visited = [new Map(), new Map(), new Map()]
+  repeated = [0, 0, 0]
+  lcm = 1
+
+  while repeated.reduce(((acc, value) -> acc + value), 0) < 3
+    Moon.motion(moons)
+
+    key = [[], [], []]
+    for moon in moons
+      for _value, index in moon.position
+        key[index].push(moon.position[index])
+        key[index].push(moon.velocity[index])
+
+    for _value, index in key
+      hashKey = String(key[index])
+      if repeated[index] == 0 && visited[index].has(hashKey)
+        repeated[index] += 1
+        lcm = LCM(step, lcm)
+
+      visited[index].set(hashKey, step)
+
+    step += 1
+
+  lcm
+
 console.log(part1())
+console.log(part2())
