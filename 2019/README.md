@@ -58,3 +58,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Space Police](https://adventofcode.com/2019/day/11)
 * Solution: [`SpacePolice.java`](day-11/SpacePolice.java)
 * Language: Java
+
+### Day 12
+* Puzzle: [The N-Body Problem](https://adventofcode.com/2019/day/12)
+* Solution: [`the_n_body_problem.coffee`](day-12/the_n_body_problem.coffee)
+* Language: CoffeeScript
