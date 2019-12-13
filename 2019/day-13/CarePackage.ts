@@ -18,12 +18,19 @@ type Tile = {
   move: (x: number, y: number) => void
 }
 
-const execute = (input: number[]) => {
-  const memory = [...input]
-  let output = []
+type Tally = {
+  blocks: number,
+  score: number
+}
+
+const execute = (input: number[], quarters?: number): Tally => {
+  const memory: number[] = [...input]
+  const output: number[] = []
   const tiles: Tile[] = []
+
   let instructionPointer = 0
   let relativeBase = 0
+  let score = 0
 
   const fetchValue = (pointer: number): number => memory[pointer] || 0
 
@@ -40,26 +47,36 @@ const execute = (input: number[]) => {
     }
   }
 
+  // Memory address 0 represents the number of quarters that have been inserted;
+  // set it to 2 to play for free
+  if (quarters) {
+    memory[0] = quarters
+  }
+
   while (instructionPointer < memory.length) {
     const instruction = memory[instructionPointer]
 
     if (output.length == 3) {
-      const tile = tiles.find((tile) => tile.x == output[0] && tile.y == output[1])
-      if (tile == undefined) {
-        const newTile = new Tile(output[0], output[1], output[2])
-        tiles.push(newTile)
+      if (output[0] == -1 && output[1] == 0) {
+        score = output[2]
       } else {
-        tile.id = output[2]
-      }
+        const tile = tiles.find((tile) => tile.x == output[0] && tile.y == output[1])
+        if (tile == undefined) {
+          const newTile = new Tile(output[0], output[1], output[2])
+          tiles.push(newTile)
+        } else {
+          tile.id = output[2]
+        }
 
-      if (output[2] == 4) {
-        const ball = tiles.find((tile) => tile.id == 4)
-        ball.move(output[0], output[1])
-      } else if (output[2] == 3) {
-        const pad = tiles.find((tile) => tile.id == 3)
-        pad.move(output[0], output[1])
+        if (output[2] == 4) {
+          const ball = tiles.find((tile) => tile.id == 4)
+          ball.move(output[0], output[1])
+        } else if (output[2] == 3) {
+          const pad = tiles.find((tile) => tile.id == 3)
+          pad.move(output[0], output[1])
+        }
       }
-      output = []
+      output.splice(0, 3)
     }
 
     const opcode = instruction % 100;
@@ -118,7 +135,8 @@ const execute = (input: number[]) => {
         break;
       case 99:
         instructionPointer = memory.length
-        return tiles.filter((tile) => tile.id == 2).length
+        const blocks = tiles.filter((tile) => tile.id == 2).length
+        return {blocks, score}
       default:
         throw new Error('Unknown opcode!')
     }
@@ -127,4 +145,6 @@ const execute = (input: number[]) => {
 
 const read = fs.readFileSync('input');
 const input = read.toString().split(',').map(Number)
-console.log(execute(input))
+
+console.log(execute(input).blocks)
+console.log(execute(input, 2).score)
