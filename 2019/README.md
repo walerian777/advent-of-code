@@ -63,3 +63,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [The N-Body Problem](https://adventofcode.com/2019/day/12)
 * Solution: [`the_n_body_problem.coffee`](day-12/the_n_body_problem.coffee)
 * Language: CoffeeScript
+
+### Day 13
+* Puzzle: [Care Package](https://adventofcode.com/2019/day/13)
+* Solution: [`CarePackage.ts`](day-13/CarePackage.ts)
+* Language: TypeScript
