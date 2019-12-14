@@ -68,3 +68,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Care Package](https://adventofcode.com/2019/day/13)
 * Solution: [`CarePackage.ts`](day-13/CarePackage.ts)
 * Language: TypeScript
+
+### Day 14
+* Puzzle: [Space Stoichiometry](https://adventofcode.com/2019/day/14)
+* Solution: [`SpaceStoichiometry.cs`](day-14/SpaceStoichiometry.cs)
+* Language: C#
