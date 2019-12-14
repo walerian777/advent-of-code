@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceStoichiometry
 {
@@ -23,8 +21,14 @@ namespace SpaceStoichiometry
         {
             var reactions = FetchChemicalReactions();
             var oreNeeded = calculateOreNeededToProduceFuel(1, reactions);
-            
+
+            // Part 1
             Console.WriteLine(oreNeeded);
+
+            var maxFuel = calculateMaxFuel(1000000000000, reactions);
+
+            // Part 2
+            Console.WriteLine(maxFuel);
             Console.ReadKey();
         }
 
@@ -48,9 +52,9 @@ namespace SpaceStoichiometry
             return reactions;
         }
 
-        static int calculateOreNeededToProduceFuel(int fuelAmount, Dictionary<string, ChemicalReaction> availableReactions)
+        static long calculateOreNeededToProduceFuel(long fuelAmount, Dictionary<string, ChemicalReaction> availableReactions)
         {
-            var needs = new Dictionary<string, int> { { "FUEL", fuelAmount } };
+            var needs = new Dictionary<string, long> { { "FUEL", fuelAmount } };
 
             while (needs.Any(need => need.Key != "ORE" && need.Value > 0))
             {
@@ -71,6 +75,27 @@ namespace SpaceStoichiometry
             }
 
             return needs["ORE"];
+        }
+
+        static long calculateMaxFuel(long oreSupply, Dictionary<string, ChemicalReaction> availableReactions)
+        {
+            long minimumFuelProduced = 0;
+            long maximumFuelProduced = oreSupply;
+
+            while (maximumFuelProduced - minimumFuelProduced > 1)
+            {
+                var producedFuel = minimumFuelProduced + (maximumFuelProduced - minimumFuelProduced) / 2;
+                if (calculateOreNeededToProduceFuel(producedFuel, availableReactions) > oreSupply)
+                {
+                    maximumFuelProduced = producedFuel;
+                }
+                else
+                {
+                    minimumFuelProduced = producedFuel;
+                }
+            }
+
+            return minimumFuelProduced;
         }
     }
 }
