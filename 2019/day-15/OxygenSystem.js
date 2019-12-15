@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const execute = (input) => {
+const execute = (input, fillWithOxygen) => {
   const memory = [...input]
   const output = []
   const map = {}
@@ -9,6 +9,9 @@ const execute = (input) => {
   let direction = 0
   let x = 0
   let y = 0
+  let oxygenX = 0
+  let oxygenY = 0
+  let locationsRevealed = 0
 
   let instructionPointer = 0
   let relativeBase = 0
@@ -68,6 +71,35 @@ const execute = (input) => {
     return null
   }
 
+  const calculateTimeToFillWithOxygen = (x, y) => {
+    const filledWithOxygen = {}
+    let locationsToFill = [[x, y]]
+    let timeElapsed = 0
+
+    while (locationsToFill.length > 0) {
+      const newLocationsToFill = []
+
+      for (const location of locationsToFill) {
+        const [x, y] = location
+
+        filledWithOxygen[generateKey(x, y)] = true
+        for (let direction = 1; direction <= 4; direction++) {
+          const [dx, dy] = calculateVector(direction)
+          const key = generateKey(x + dx, y + dy)
+
+          if (!filledWithOxygen[key] && map[key] == 1) {
+            newLocationsToFill.push([x + dy, y + dy])
+          }
+        }
+      }
+
+      locationsToFill = newLocationsToFill
+      timeElapsed++
+    }
+
+    return timeElapsed
+  }
+
   while (instructionPointer < memory.length) {
     const instruction = memory[instructionPointer]
 
@@ -79,12 +111,22 @@ const execute = (input) => {
       map[key] = status
 
       if (status == 1) {
-        y += dy
         x += dx
+        y += dy
+        locationsRevealed++
       } else if (status == 2) {
-        y += dy
         x += dx
-        return calculateDistance(0, 0)
+        y += dy
+        if (fillWithOxygen) {
+          oxygenX = x
+          oxygenY = y
+        } else {
+          return calculateDistance(0, 0)
+        }
+      }
+
+      if (fillWithOxygen && locationsRevealed > 1500) {
+        return calculateTimeToFillWithOxygen(oxygenX, oxygenY)
       }
 
     }
@@ -156,3 +198,4 @@ const read = fs.readFileSync('input');
 const input = read.toString().split(',').map(Number)
 
 console.log(execute(input))
+console.log(execute(input, true))
