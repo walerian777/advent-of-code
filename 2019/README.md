@@ -78,3 +78,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Oxygen System](https://adventofcode.com/2019/day/15)
 * Solution: [`OxygenSystem.js`](day-15/OxygenSystem.js)
 * Language: JavaScript
+
+### Day 16
+* Puzzle: [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16)
+* Solution: [`flawed-frequency-transmission.jl`](day-16/flawed-frequency-transmission.jl)
+* Language: Julia
