@@ -83,3 +83,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16)
 * Solution: [`flawed-frequency-transmission.jl`](day-16/flawed-frequency-transmission.jl)
 * Language: Julia
+
+### Day 17
+* Puzzle: [Set and Forget](https://adventofcode.com/2019/day/17)
+* Solution: [`set_and_forget.py`](day-17/set_and_forget.py)
+* Language: Python
