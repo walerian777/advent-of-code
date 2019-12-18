@@ -103,9 +103,11 @@ def load_input():
 
 def sum_alignment_parameters(memory):
     computer = IntcodeComputer(memory)
-    computer.execute()
     i, j = 0, 0
     output = ''
+
+    computer.execute()
+
     for character in computer.output_queue:
         output += chr(character)
 
@@ -120,5 +122,27 @@ def sum_alignment_parameters(memory):
                 alignment_parameters_sum += i * j
     return alignment_parameters_sum
 
+def prepare_pattern(continuous_video_feed='n'):
+    main_movement_routine = 'A,B,A,C,B,C,B,A,C,B'
+    function_a = 'L,10,L,6,R,10'
+    function_b = 'R,6,R,8,R,8,L,6,R,8'
+    function_c = 'L,10,R,8,R,8,L,10'
+
+    rules = [main_movement_routine, function_a, function_b, function_c, continuous_video_feed]
+
+    return ''.join(rule + '\n' for rule in rules)
+
+def collect_dust(memory, pattern):
+    computer = IntcodeComputer(memory)
+    characters = [ord(character) for character in pattern]
+
+    computer.execute(characters)
+
+    return computer.output_queue.pop()
+
 initial_memory = load_input()
 print(sum_alignment_parameters(initial_memory))
+
+initial_memory[0] = 2
+pattern = prepare_pattern()
+print(collect_dust(initial_memory, pattern))
