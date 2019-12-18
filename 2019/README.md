@@ -88,3 +88,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Set and Forget](https://adventofcode.com/2019/day/17)
 * Solution: [`set_and_forget.py`](day-17/set_and_forget.py)
 * Language: Python
+
+### Day 18
+* Puzzle: [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18)
+* Solution: [`many_worlds_interpretation.cr`](day-18/many_worlds_interpretation.cr)
+* Language: Crystal
