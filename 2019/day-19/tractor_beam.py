@@ -1,8 +1,8 @@
 # https://adventofcode.com/2019/day/19
 
 class IntcodeComputer:
-    def __init__(self, program_input):
-        self.memory = program_input.copy() + [0] * 5000
+    def __init__(self, memory_input):
+        self.memory = memory_input.copy() + [0] * 5000
         self.instruction_pointer = 0
         self.relative_base = 0
         self.next_input = 0
@@ -114,6 +114,41 @@ def calculate_affected_points(memory):
 
     return affected_points
 
+def find_fitting_square(memory):
+    x = find_fitting_x(memory)
+    y = find_fitting_y(x, memory)
+    x -= 99
+    return x * 10000 + y
+
+
+def find_fitting_x(memory):
+    l = 0
+    r = 10000
+    while l != r - 1:
+        m = (l + r) // 2
+        y = find_fitting_y(m, memory)
+        if validate_coordinates(m, y, memory):
+            r = m
+        else:
+            l = m
+    return r
+
+def find_fitting_y(x, memory):
+    l = 0
+    r = x * 1.5
+    while l != r - 1:
+        m = (l + r) // 2
+        if fetch_coordinates(x, m, memory):
+            r = m
+        else:
+            l = m
+    return r
+
+def validate_coordinates(x, y, memory):
+    return fetch_coordinates(x, y, memory) and fetch_coordinates(x - 99, y, memory) and \
+        fetch_coordinates(x, y + 99, memory) and fetch_coordinates(x - 99, y + 99, memory)
 
 initial_memory = load_input()
 print(calculate_affected_points(initial_memory))
+
+print(find_fitting_square(initial_memory))
