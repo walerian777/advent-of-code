@@ -115,9 +115,85 @@ class PathFinder
   end
 end
 
+class AdvancedPathFinder
+  def initialize(map : Array(Array(Tile)))
+    @map = map
+    @rows = Int32.new(map.size)
+    @columns = Int32.new(map.first.size)
+    @keys = Set(Tile).new
+    @doors = Set(Tile).new
+    @collectors = [] of Collector
+    @to_visit = [] of Tuple(String, String, Int32)
+    scan_map
+  end
+
+  def shortest_path
+    visited = Hash(Tuple(String, String), Int32).new
+
+    while !@to_visit.empty?
+      step = @to_visit.shift()
+      state = {step[0], step[1]}
+      next if visited.includes?(state)
+
+      visited[state] = step[2]
+
+      step[0].split(',').map { |x| x.to_i }.each_slice(2) do |slice|
+        row, column = slice.pop(2)
+        tile = @map[row][column]
+
+        next if tile.wall?
+        next if invalid_position?(row, column)
+        next if tile.door? && step[1].includes?(tile.symbol)
+        collected_keys = Set.new(step[1].split)
+
+        if tile.key?
+          collected_keys.add(tile.symbol.to_s)
+          return step[2] if @keys.size == collected_keys.size
+        end
+
+        [{-1, 0}, {0, 1}, {1, 0}, {0, -1}].each do |x, y|
+          new_row = row + x
+          new_column = column + y
+          state = {[new_row, new_column].join, collected_keys.join, step[2] + 1}
+          @to_visit.push(state)
+        end
+      end
+    end
+  end
+
+  private def collectors_position
+    @collectors.flat_map { |collector| [collector.row, collector.column] }.join(',')
+  end
+
+  private def scan_map
+    @rows.times do |row|
+      @columns.times do |column|
+        tile = @map[row][column]
+        if tile.entrance?
+          collector = Collector.new(row, column)
+          @collectors.push(collector)
+        elsif tile.key?
+          @keys.add(tile)
+        elsif tile.door?
+          @doors.add(tile)
+        end
+      end
+    end
+    state = {collectors_position, "", 0}
+    @to_visit.push(state)
+  end
+
+  private def invalid_position?(row, column)
+    !(0 <= row < @rows && 0 <= column < @columns)
+  end
+end
+
 MAP = File.read("input").strip().split("\n").map do |line|
   line.split("").map { |symbol| Tile.new(symbol.chars.first) }
 end
 
 finder = PathFinder.new(MAP)
 puts finder.shortest_path
+
+advanced_finder = AdvancedPathFinder.new(MAP)
+puts advanced_finder.shortest_path
