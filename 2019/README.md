@@ -98,3 +98,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Tractor Beam](https://adventofcode.com/2019/day/19)
 * Solution: [`tractor_beam.py`](day-19/tractor_beam.py)
 * Language: Python
+
+### Day 20
+* Puzzle: [Donut Maze](https://adventofcode.com/2019/day/20)
+* Solution: [`donut_maze.kts`](day-20/donut_maze.kts)
+* Language: Kotlin
