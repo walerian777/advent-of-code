@@ -1,13 +1,12 @@
 import java.io.File
 import java.lang.Math.pow
-import kotlin.math.sign
 
 data class Coordinates(val row: Int, val column: Int) {
   operator fun plus(other: Coordinates) = Coordinates(row + other.row, column + other.column)
   operator fun minus(other: Coordinates) = Coordinates(row - other.row, column - other.column)
 }
 
-data class Portal(val name: Int, val steps: Int)
+data class Portal(val name: Int, val steps: Int = 0, val level: Int = 0)
 
 val PASSAGE = '.'
 val WALL = '#'
@@ -20,23 +19,41 @@ val DIRECTIONS = listOf(
   Coordinates(-1, 0)
 )
 
-tailrec fun calculateLeastSteps(
-  currentList: List<Portal>,
-  portals: Map<Int, List<Pair<Int, Int>>>,
-  steps: Int = 1000000
+fun signum(value: Int): Int {
+  if (value > 0) {
+    return 1
+  } else {
+    return -1
+  }
+}
+fun calculateLeastSteps(
+  currentPortals: List<Portal>,
+  allPortals: Map<Int, List<Pair<Int, Int>>>,
+  steps: Int,
+  recursive: Boolean
 ): Int {
-  if (currentList.isEmpty()) {
+  if (currentPortals.isEmpty()) {
     return steps - 1
   } else {
     var nextSteps = steps
-    val nextList = currentList.flatMap { node ->
-      portals[-node.name]!!.mapNotNull {
-        val nextPortal = Portal(it.first, it.second + node.steps + 1)
+    val nextPortals = currentPortals.flatMap { portal ->
+      allPortals[-portal.name]!!.mapNotNull {
+        val nextPortal = Portal(
+          it.first,
+          it.second + portal.steps + 1,
+          if (recursive) portal.level - signum(it.first) else 0
+        )
         if (nextPortal.steps < nextSteps) {
           if (nextPortal.name != 9090) {
-            nextPortal
+            if (nextPortal.level < 0) {
+              null
+            } else {
+              nextPortal
+            }
           } else {
-            nextSteps = nextPortal.steps
+            if (portal.level == 0) {
+              nextSteps = nextPortal.steps
+            }
             null
           }
         } else {
@@ -45,31 +62,31 @@ tailrec fun calculateLeastSteps(
       }
 
     }
-    return calculateLeastSteps(nextList, portals, nextSteps)
+    return calculateLeastSteps(nextPortals, allPortals, nextSteps, recursive)
   }
 }
 
 fun findDistances(
-  currentList: List<Pair<Coordinates, Coordinates>>,
+  currentCoordinates: List<Pair<Coordinates, Coordinates>>,
   maze: Map<Coordinates, Char>,
   portals: Map<Coordinates, Int>,
   steps: Int = 0,
   currentDistances: List<Pair<Int, Int>> = emptyList()
 ): List<Pair<Int, Int>> {
-  if (currentList.isEmpty()) {
+  if (currentCoordinates.isEmpty()) {
     return currentDistances.filter { it.second != 0 && it.first != 6565 }
   } else {
     val nextDistances = mutableListOf<Pair<Int, Int>>()
-    val nextList = currentList.flatMap { node ->
-      val validSteps = DIRECTIONS.map { it + node.first }
-        .filterNot { coord -> listOf(WALL, SPACE).any { it == maze.getValue(coord) } || coord == node.second }
+    val nextCoordinates = currentCoordinates.flatMap { portal ->
+      val validSteps = DIRECTIONS.map { it + portal.first }
+        .filterNot { coord -> listOf(WALL, SPACE).any { it == maze.getValue(coord) } || coord == portal.second }
       val nextPortal = validSteps.find { maze.getValue(it).isLetter() }
       (if (nextPortal == null) validSteps else {
-        nextDistances.add(Pair(portals[node.first]!!, steps))
+        nextDistances.add(Pair(portals[portal.first]!!, steps))
         validSteps - nextPortal
-      }).map { it to node.first }
+      }).map { it to portal.first }
     }
-    return findDistances(nextList, maze, portals, steps + 1, currentDistances + nextDistances)
+    return findDistances(nextCoordinates, maze, portals, steps + 1, currentDistances + nextDistances)
   }
 }
 
@@ -119,8 +136,11 @@ fun main() {
   val portals = maze.filterValues { it.isLetter() }
   val distances = portalDistances(maze, portals, height, width)
 
-  val steps = calculateLeastSteps(listOf(Portal(-6565, 0)), distances)
+  val steps = calculateLeastSteps(listOf(Portal(-6565)), distances, 1000, false)
   println(steps)
+
+  val outermostLayerSteps = calculateLeastSteps(listOf(Portal(-6565)), distances, 10000, true)
+  println(outermostLayerSteps)
 }
 
 main()
