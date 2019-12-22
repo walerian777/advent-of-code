@@ -109,14 +109,28 @@ def load_input():
         input_data = inp.read().strip()
     return [int(i) for i in input_data.split(',')]
 
-def prepare_instructions():
-    instructions = [
+def prepare_instructions(advanced=False):
+    basic_instructions = [
             'NOT C J',
             'NOT A T',
             'OR T J',
             'AND D J',
             'WALK'
             ]
+    advanced_instructions = [
+            'NOT C J',
+            'NOT B T',
+            'OR T J',
+            'NOT A T',
+            'OR T J',
+            'AND D J',
+            'NOT E T',
+            'NOT T T',
+            'OR H T',
+            'AND T J',
+            'RUN'
+            ]
+    instructions = advanced_instructions if advanced else basic_instructions
     return ''.join(instruction + '\n' for instruction in instructions)
 
 def calculate_hull_damage(memory, instructions):
@@ -125,7 +139,7 @@ def calculate_hull_damage(memory, instructions):
 
     while output != 10:
       computer.execute()
-      computer.fetch_output()
+      output = computer.fetch_output()
 
     characters = [ord(character) for character in instructions]
 
@@ -133,7 +147,7 @@ def calculate_hull_damage(memory, instructions):
 
     while not computer.idle:
         output = computer.fetch_output()
-        if output > 255:
+        if output and output > 255:
             return output
         computer.execute()
 
@@ -142,3 +156,6 @@ def calculate_hull_damage(memory, instructions):
 initial_memory = load_input()
 instructions = prepare_instructions()
 print(calculate_hull_damage(initial_memory, instructions))
+
+advanced_instructions = prepare_instructions(True)
+print(calculate_hull_damage(initial_memory, advanced_instructions))
