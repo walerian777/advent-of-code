@@ -55,3 +55,34 @@
             (setq desired-card (inc-command (first (second pair))))))))
 
 (print desired-card)
+
+(setq deck-length 119315717514047)
+(setq desired-card 2020)
+(setq shuffle-count 101741582076661)
+
+(setq mutliplier 1)
+(setq addition 0)
+
+(loop for pair in (mapcar 'list input numbers)
+      do
+      (if (deal-condition? (first pair))
+        (progn
+          (setq mutliplier (mod (* mutliplier -1) deck-length))
+          (setq addition (mod (+ addition mutliplier) deck-length)))
+        (if (cut-condition? (first pair))
+          (setq addition (mod (+ addition (* mutliplier (first (second pair)))) deck-length))
+          (if (inc-condition? (first pair))
+            (setq mutliplier (mod (* mutliplier (first (second pair))) deck-length))))))
+
+(defun mod-pow (base power modulo)
+  (mod (expt base power) modulo))
+
+(defun inverse (card-position)
+  (mod-pow card-position (- deck-length 2) deck-length))
+
+(defun compute-card (shuffle-repeats card-position)
+  (setq mul (mod-pow mutliplier shuffle-repeats deck-length))
+  (setq add (mod (* addition (- mul 1) (inverse (mod (- 1 mutliplier) deck-length))) deck-length))
+  (mod (+ (* card-position mul) add) deck-length))
+
+(print (compute-card shuffle-count desired-card))
