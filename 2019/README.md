@@ -108,3 +108,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Springdroid Adventure](https://adventofcode.com/2019/day/21)
 * Solution: [`springdroid_adventure.py`](day-21/springdroid_adventure.py)
 * Language: Python
+
+### Day 22
+* Puzzle: [Slam Shuffle](https://adventofcode.com/2019/day/22)
+* Solution: [`slam-shuffle.cl`](day-22/slam-shuffle.cl)
+* Language: Common Lisp
