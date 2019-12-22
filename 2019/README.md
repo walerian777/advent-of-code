@@ -103,3 +103,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Donut Maze](https://adventofcode.com/2019/day/20)
 * Solution: [`donut_maze.kts`](day-20/donut_maze.kts)
 * Language: Kotlin
+
+### Day 21
+* Puzzle: [Springdroid Adventure](https://adventofcode.com/2019/day/21)
+* Solution: [`springdroid_adventure.py`](day-21/springdroid_adventure.py)
+* Language: Python
