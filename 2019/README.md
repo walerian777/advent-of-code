@@ -113,3 +113,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Slam Shuffle](https://adventofcode.com/2019/day/22)
 * Solution: [`slam-shuffle.cl`](day-22/slam-shuffle.cl)
 * Language: Common Lisp
+
+### Day 24
+* Puzzle: [Planet of Discord](https://adventofcode.com/2019/day/24)
+* Solution: [`planet_of_discord.rb`](day-24/planet_of_discord.rb)
+* Language: Ruby
