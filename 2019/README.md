@@ -118,3 +118,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Category Six](https://adventofcode.com/2019/day/23)
 * Solution: [`category_six.py`](day-23/category_six.py)
 * Language: Python
+
+### Day 24
+* Puzzle: [Planet of Discord](https://adventofcode.com/2019/day/24)
+* Solution: [`planet_of_discord.rb`](day-24/planet_of_discord.rb)
+* Language: Ruby
