@@ -123,3 +123,8 @@ Preferably a different language every day - with an exception for follow-up puzz
 * Puzzle: [Planet of Discord](https://adventofcode.com/2019/day/24)
 * Solution: [`planet_of_discord.rb`](day-24/planet_of_discord.rb)
 * Language: Ruby
+
+### Day 25
+* Puzzle: [Cryostasis](https://adventofcode.com/2019/day/25)
+* Solution: [`cryostasis.md`](day-25/cryostasis.md)
+* Language: Pen & Paper
