@@ -1,14 +1,14 @@
 # https://adventofcode.com/2019/day/23
 
 class IntcodeComputer:
-    def __init__(self, program_input, inputValue=None):
+    def __init__(self, program_input, input_value=None):
         self.memory = program_input.copy() + [0] * 5000
         self.instruction_pointer = 0
         self.relative_base = 0
         self.next_input = 0
         self.input_queue = []
-        if inputValue is not None:
-            self.input_queue += inputValue
+        if input_value is not None:
+            self.input_queue += input_value
         self.output_queue = []
         self.x = 50
         self.y = 50
@@ -42,9 +42,9 @@ class IntcodeComputer:
 
         return (-1, -1, -1)
 
-    def execute(self, inputValue=None):
-        if inputValue is not None:
-            self.input_queue += inputValue
+    def execute(self, input_value=None):
+        if input_value is not None:
+            self.input_queue += input_value
 
         while self.instruction_pointer < len(self.memory):
             instruction = self.memory[self.instruction_pointer]
@@ -135,20 +135,55 @@ def first_255_packet(memory):
     index = 0
     address = 0
 
+    while True:
+        computers[index].execute()
+        (address, x, y) = computers[index].output_queue.pop()
+
+        if address != -1 and address != 255:
+            computers[address].input_queue.append(x)
+            computers[address].input_queue.append(y)
+            index = address
+
+        elif address == 255:
+            return y
+
+def first_0_nat_packet(memory):
+    computers = send_packets(memory)
+
+    index = 0
+    address = 0
+    nat_X = None
+    nat_Y = None
+    prev_nat_Y = None
     empty_count = 0
 
     while True:
         computers[index].execute()
         (address, x, y) = computers[index].output_queue.pop()
 
-        if address != -1 and addr != 255:
+        if address != -1 and address != 255:
             computers[address].input_queue.append(x)
             computers[address].input_queue.append(y)
-            empty_count = 0
             index = address
-
         elif address == 255:
-            return y
+            nat_X = x
+            nat_Y = y
+            empty_count = 0
+        else:
+            if empty_count == 10000:
+                if prev_nat_Y and nat_Y == prev_nat_Y:
+                    return nat_Y
+
+                prev_nat_Y = nat_Y
+
+                computers[0].input_queue.append(nat_X)
+                computers[0].input_queue.append(nat_Y)
+                empty_count = 0
+            else:
+                empty_count += 1
+            index = (index + 1) % 50
 
 initial_memory = load_input()
 print(first_255_packet(initial_memory))
+
+print(first_0_nat_packet(initial_memory))
