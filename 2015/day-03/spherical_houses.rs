@@ -32,22 +32,34 @@ impl Location {
 
 fn main() {
     let mut locations = HashSet::new();
-    let mut current_location = Location::new(0, 0);
-    locations.insert(current_location);
+    let mut santa_location = Location::new(0, 0);
+    let mut robot_location = Location::new(0, 0);
+    locations.insert(santa_location);
 
     let input = std::fs::read_to_string("input")
         .expect("Oops");
     let directions = input.trim_end();
 
-    for direction in directions.chars() {
-        current_location = match direction {
-            '^' => current_location.north(),
-            'v' => current_location.south(),
-            '>' => current_location.east(),
-            '<' => current_location.west(),
-            _ => current_location
-        };
-        locations.insert(current_location);
+    for (turn, direction) in directions.chars().enumerate() {
+        if turn % 2 == 0 {
+            santa_location = match direction {
+                '^' => santa_location.north(),
+                'v' => santa_location.south(),
+                '>' => santa_location.east(),
+                '<' => santa_location.west(),
+                _ => santa_location
+            };
+            locations.insert(santa_location);
+        } else {
+            robot_location = match direction {
+                '^' => robot_location.north(),
+                'v' => robot_location.south(),
+                '>' => robot_location.east(),
+                '<' => robot_location.west(),
+                _ => robot_location
+            };
+            locations.insert(robot_location);
+        }
     }
 
     println!("{:?}", locations.len());
