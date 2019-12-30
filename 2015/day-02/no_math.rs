@@ -24,9 +24,9 @@ impl PresentBox {
     }
 
     fn smallest_side(&self) -> u32 {
-        *match self.sides().iter().min() {
-            Some(value) => value,
-            None => &0u32
+        match self.sides().iter().min() {
+            Some(value) => *value,
+            None => 0
         }
     }
 
@@ -37,6 +37,23 @@ impl PresentBox {
 
     fn wrapping_paper(&self) -> u32 {
         self.surface() + self.smallest_side()
+    }
+
+    fn sizes(&self) -> Vec<u32> {
+        vec![self.length, self.width, self.height]
+    }
+
+    fn smallest_perimeter(&self) -> u32 {
+        let biggest_size: u32 = match self.sizes().iter().max() {
+            Some(value) => *value,
+            None => 0
+        };
+        let sides_sum: u32 = self.sizes().iter().sum();
+        (sides_sum - biggest_size) * 2
+    }
+
+    fn volume(&self) -> u32 {
+        self.length * self.width * self.height
     }
 }
 
@@ -56,4 +73,7 @@ fn main() {
     let boxes = load_input();
     let wrapping_paper: u32 = boxes.iter().fold(0, |acc, b| acc + b.wrapping_paper());
     println!("{:?}", wrapping_paper);
+
+    let ribbon: u32 = boxes.iter().fold(0, |acc, b| acc + b.volume() + b.smallest_perimeter());
+    println!("{:?}", ribbon);
 }
