@@ -14,11 +14,13 @@ fn main() {
         let digest = hasher.result_str();
 
         if digest.starts_with("00000") {
+            println!("{:?}", number);
+        }
+        if digest.starts_with("000000") {
+            println!("{:?}", number);
             break;
         }
         number += 1;
         hasher.reset();
     }
-
-    println!("{:?}", number);
 }
