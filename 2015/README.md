@@ -9,3 +9,7 @@
 ### Day 3
 * Puzzle: [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3)
 * Solution: [`spherical_houses.rs`](day-3/spherical_houses.rs)
+
+### Day 04
+* Puzzle: [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/04)
+* Solution: [`ideal_stocking_stuffer.rs`](day-04/ideal_stocking_stuffer.rs)
