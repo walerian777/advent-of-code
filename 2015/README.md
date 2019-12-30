@@ -5,3 +5,7 @@
 ### Day 02
 * Puzzle: [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/02)
 * Solution: [`no_math.rs`](day-02/no_math.rs)
+
+### Day 3
+* Puzzle: [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3)
+* Solution: [`spherical_houses.rs`](day-3/spherical_houses.rs)
