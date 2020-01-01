@@ -13,3 +13,7 @@
 ### Day 04
 * Puzzle: [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/04)
 * Solution: [`ideal_stocking_stuffer.rs`](day-04/ideal_stocking_stuffer.rs)
+
+### Day 05
+* Puzzle: [Doesn't He Have Intern-Elves For This?](https://adventofcode.com/2015/day/05)
+* Solution: [`nice_strings.rs`](day-05/nice_strings.rs)
