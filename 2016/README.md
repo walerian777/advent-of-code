@@ -8,3 +8,7 @@ The year of Clojure
 ### Day 2
 * Puzzle: [Bathroom Security](https://adventofcode.com/2016/day/2)
 * Solution: [`bathroom_security.clj`](day-02/bathroom_security.clj)
+
+### Day 3
+* Puzzle: [Squares With Three Sides](https://adventofcode.com/2016/day/3)
+* Solution: [`squares_with_three_sides.clj`](day-02/squares_with_three_sides.clj)
