@@ -18,3 +18,12 @@
 
 (println
  (count (filter #(apply valid-triagle? %) triangles)))
+
+(defn transpose [& xs]
+  (apply map list xs))
+
+(def transposed-triangles
+  (apply concat (map #(partition 3 %) (apply transpose triangles))))
+
+(println
+ (count (filter #(apply valid-triagle? %) transposed-triangles)))
