@@ -11,4 +11,8 @@ The year of Clojure
 
 ### Day 3
 * Puzzle: [Squares With Three Sides](https://adventofcode.com/2016/day/3)
-* Solution: [`squares_with_three_sides.clj`](day-02/squares_with_three_sides.clj)
+* Solution: [`squares_with_three_sides.clj`](day-03/squares_with_three_sides.clj)
+
+### Day 4
+* Puzzle: [Security Through Obscurity](https://adventofcode.com/2016/day/4)
+* Solution: [`security_through_obscurity.clj`](day-04/security_through_obscurity.clj)
