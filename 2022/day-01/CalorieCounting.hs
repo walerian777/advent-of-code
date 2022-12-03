@@ -2,6 +2,8 @@
 
 module CalorieCounting where
 
+import Data.List (sortBy)
+
 readLines :: String -> IO [String]
 readLines = fmap lines . readFile
 
@@ -17,5 +19,6 @@ toCalories' (x:xs) (c:calories) = toCalories' xs (c + (read x):calories)
 
 main :: IO ()
 main = do
-  calories <- fmap toCalories (readLines "input")
-  print $ maximum calories
+  calories <- fmap (sortBy (flip compare) . toCalories) (readLines "input")
+  print $ head calories
+  print $ sum ((take 3) calories)
