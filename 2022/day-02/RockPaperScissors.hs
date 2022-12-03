@@ -36,6 +36,25 @@ toShape x
   | x == "C" || x == "Z" = Scissors
   | otherwise = error "Oops"
 
+toExpectedShape :: String -> Shape -> Shape
+toExpectedShape x Rock
+  | x == "X" = Scissors
+  | x == "Y" = Rock
+  | x == "Z" = Paper
+  | otherwise = error "Oops"
+
+toExpectedShape x Paper
+  | x == "X" = Rock
+  | x == "Y" = Paper
+  | x == "Z" = Scissors
+  | otherwise = error "Oops"
+
+toExpectedShape x Scissors
+  | x == "X" = Paper
+  | x == "Y" = Scissors
+  | x == "Z" = Rock
+  | otherwise = error "Oops"
+
 readLines :: String -> IO [String]
 readLines = fmap lines . readFile
 
@@ -43,7 +62,15 @@ toTotalScore :: String -> Points
 toTotalScore s = (result x y) + (toPoints y)
   where (x:y:_) = map toShape $ words s
 
+toTotalScore' :: String -> Points
+toTotalScore' s = (result x y) + (toPoints y)
+  where
+    (s1:s2:_) = words s
+    x = toShape s1
+    y = toExpectedShape s2 x
+
 main :: IO ()
 main = do
   input <- readLines "input"
   print $ sum $ map toTotalScore input
+  print $ sum $ map toTotalScore' input
