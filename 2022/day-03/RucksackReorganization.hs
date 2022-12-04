@@ -3,6 +3,7 @@
 module RucksackReorganization where
 
 import Data.Map (Map, fromList, (!))
+import Data.List.Split (chunksOf)
 
 type Priority = Integer
 type Item = Char
@@ -23,10 +24,17 @@ toRucksack s = splitAt (midIndex s) s
 readLines :: String -> IO [String]
 readLines = fmap lines . readFile
 
-intersection :: Rucksack -> [Item]
-intersection (xs, ys) = filter (`elem` xs) ys
+intersection :: (Eq a) => [a] -> [a] -> [a]
+intersection xs ys = filter (`elem` xs) ys
+
+rucksackIntersection :: Rucksack -> [Item]
+rucksackIntersection (xs, ys) = intersection xs ys
+
+groupIntersection :: [[Item]] -> [Item]
+groupIntersection (x:y:z:_) = intersection (intersection x y) (intersection y z)
 
 main :: IO ()
 main = do
-  rucksacks <- fmap (map toRucksack) (readLines "input")
-  print $ sum $ map (getPriority . head . intersection) rucksacks
+  input <- readLines "input"
+  print $ sum $ map (getPriority . head . rucksackIntersection . toRucksack) input
+  print $ sum $ map (getPriority . head . groupIntersection) (chunksOf 3 input)
