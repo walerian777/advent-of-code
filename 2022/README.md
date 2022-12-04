@@ -16,3 +16,8 @@
 * Puzzle: [Rucksack Reorganization](https://adventofcode.com/2022/day/3)
 * Solution: [`RucksackReorganization.hs`](day-03/RucksackReorganization.hs)
 * Language: Haskell
+
+### Day 4
+* Puzzle: [Camp Cleanup](https://adventofcode.com/2022/day/4)
+* Solution: [`CampCleanup.hs`](day-04/CampCleanup.hs)
+* Language: Haskell
