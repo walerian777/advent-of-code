@@ -23,14 +23,15 @@ overlap (fromX, toX) (fromY, toY) = (fromBigger, toSmaller)
     fromBigger = if fromX > fromY then fromX else fromY
     toSmaller = if toX < toY then toX else toY
 
-fullyContains :: Assignment -> Assignment -> Bool
-fullyContains x y = (size z) >= (size x) || (size z >= size y)
+fullyContains :: (Assignment, Assignment) -> Bool
+fullyContains (x, y) = (size z) >= (size x) || (size z >= size y)
   where z = overlap x y
 
-fullyContains' :: (Assignment, Assignment) -> Bool
-fullyContains' (x, y) = fullyContains x y
+anyOverlaps :: (Assignment, Assignment) -> Bool
+anyOverlaps (x, y) = (size (overlap x y)) > 0
 
 main :: IO ()
 main = do
   sections <- fmap (map parseLine) (readLines "input")
-  print $ length $ filter fullyContains' sections
+  print $ length $ filter fullyContains sections
+  print $ length $ filter anyOverlaps sections
