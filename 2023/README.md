@@ -9,3 +9,7 @@
 ### Day 2
 * Puzzle: [Cube Conundrum](https://adventofcode.com/2023/day/2)
 * Solution: [`cube_conundrum.go`](day-02/cube_conundrum.go)
+
+### Day 3
+* Puzzle: [Gear Ratios](https://adventofcode.com/2023/day/3)
+* Solution: [`gear_ratios.go`](day-03/gear_ratios.go)
