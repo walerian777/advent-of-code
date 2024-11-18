@@ -13,3 +13,7 @@
 ### Day 3
 * Puzzle: [Gear Ratios](https://adventofcode.com/2023/day/3)
 * Solution: [`gear_ratios.go`](day-03/gear_ratios.go)
+
+### Day 4
+* Puzzle: [Scratchcards](https://adventofcode.com/2023/day/4)
+* Solution: [`scratchcards.go`](day-04/scratchcards.go)
