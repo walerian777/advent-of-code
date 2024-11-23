@@ -17,3 +17,7 @@
 ### Day 4
 * Puzzle: [Scratchcards](https://adventofcode.com/2023/day/4)
 * Solution: [`scratchcards.go`](day-04/scratchcards.go)
+
+### Day 5
+* Puzzle: [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)
+* Solution: [`fertilizer.go`](day-05/fertilizer.go)
