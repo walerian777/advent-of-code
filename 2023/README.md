@@ -21,3 +21,7 @@
 ### Day 5
 * Puzzle: [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)
 * Solution: [`fertilizer.go`](day-05/fertilizer.go)
+
+### Day 6
+* Puzzle: [Wait For It](https://adventofcode.com/2023/day/6)
+* Solution: [`wait_for_it.go`](day-06/wait_for_it.go)
