@@ -25,3 +25,7 @@
 ### Day 6
 * Puzzle: [Wait For It](https://adventofcode.com/2023/day/6)
 * Solution: [`wait_for_it.go`](day-06/wait_for_it.go)
+
+### Day 7
+* Puzzle: [Camel Cards](https://adventofcode.com/2023/day/7)
+* Solution: [`camel_cards.go`](day-07/camel_cards.go)
