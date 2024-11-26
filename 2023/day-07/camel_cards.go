@@ -11,6 +11,7 @@ import (
 
 func main() {
 	fmt.Println(totalWinnings())
+	fmt.Println(totalJokerWinnings())
 }
 
 type Card byte
@@ -121,6 +122,148 @@ func totalWinnings() int {
 		for k := 0; k < 5; k++ {
 			cStrI := cardStrength(hs[i].Hand[k])
 			cStrJ := cardStrength(hs[j].Hand[k])
+			if cStrI < cStrJ {
+				return true
+			} else if cStrI > cStrJ {
+				return false
+			}
+		}
+		return false
+	})
+
+	sum := 0
+	for i, h := range hs {
+		sum += (i + 1) * int(h.Bid)
+	}
+
+	return sum
+}
+
+func cardJokerStrength(c Card) int {
+	cards := map[Card]int{
+		'J': 1,
+		'2': 2,
+		'3': 3,
+		'4': 4,
+		'5': 5,
+		'6': 6,
+		'7': 7,
+		'8': 8,
+		'9': 9,
+		'T': 10,
+		'Q': 12,
+		'K': 13,
+		'A': 14,
+	}
+	return cards[c]
+}
+
+func handJokerStrength(hand Hand) int {
+	freq := make(map[Card]int)
+	for _, c := range hand {
+		freq[c] += 1
+	}
+
+	var otherPair bool
+	var maybeFullHouse bool
+	for k, v := range freq {
+		if v == 5 {
+			return 7
+		}
+		if v == 4 {
+			if freq['J'] == 1 || k == 'J' {
+				return 7
+			}
+			return 6
+		}
+		if v == 3 {
+			if freq['J'] == 2 {
+				return 7
+			}
+			if freq['J'] == 1 {
+				return 6
+			}
+			if otherPair {
+				return 5
+			}
+			maybeFullHouse = true
+		}
+		if v == 2 {
+			if freq['J'] == 3 {
+				return 7
+			}
+			if k != 'J' && freq['J'] == 2 {
+				return 6
+			}
+			if freq['J'] == 1 {
+				if maybeFullHouse {
+					return 5
+				}
+				maybeFullHouse = true
+				continue
+			}
+			if maybeFullHouse {
+				return 5
+			}
+			if otherPair {
+				return 3
+			}
+			otherPair = true
+		}
+	}
+	if maybeFullHouse {
+		if freq['J'] == 3 {
+			return 6
+		}
+
+		return 4
+	}
+	if freq['J'] == 2 {
+		return 4
+	}
+	if otherPair {
+		return 2
+	}
+	if freq['J'] == 1 {
+		return 2
+	}
+	return 1
+}
+
+func totalJokerWinnings() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var hs []*HandBid
+
+	for scanner.Scan() {
+		line := strings.Fields(scanner.Text())
+		hand, n := line[0], line[1]
+		bid, err := strconv.Atoi(n)
+		if err != nil {
+			panic("cannot convert int")
+		}
+		hs = append(hs, &HandBid{Hand: Hand(hand), Bid: Bid(bid)})
+	}
+
+	sort.Slice(hs, func(i, j int) bool {
+		strI := handJokerStrength(hs[i].Hand)
+		strJ := handJokerStrength(hs[j].Hand)
+
+		if strI < strJ {
+			return true
+		} else if strI > strJ {
+			return false
+		}
+
+		for k := 0; k < 5; k++ {
+			cStrI := cardJokerStrength(hs[i].Hand[k])
+			cStrJ := cardJokerStrength(hs[j].Hand[k])
 			if cStrI < cStrJ {
 				return true
 			} else if cStrI > cStrJ {
