@@ -29,3 +29,7 @@
 ### Day 7
 * Puzzle: [Camel Cards](https://adventofcode.com/2023/day/7)
 * Solution: [`camel_cards.go`](day-07/camel_cards.go)
+
+### Day 8
+* Puzzle: [Haunted Wasteland](https://adventofcode.com/2023/day/8)
+* Solution: [`haunted_wasteland.go`](day-08/haunted_wasteland.go)
