@@ -33,3 +33,7 @@
 ### Day 8
 * Puzzle: [Haunted Wasteland](https://adventofcode.com/2023/day/8)
 * Solution: [`haunted_wasteland.go`](day-08/haunted_wasteland.go)
+
+### Day 9
+* Puzzle: [Mirage Maintenance](https://adventofcode.com/2023/day/9)
+* Solution: [`mirage_maintenance.go`](day-09/mirage_maintenance.go)
