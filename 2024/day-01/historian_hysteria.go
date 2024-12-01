@@ -11,6 +11,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 func part1() int {
@@ -49,6 +50,47 @@ func part1() int {
 		}
 		sum += x
 
+	}
+	return sum
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var l2 []int
+
+	occ := make(map[int]int)
+
+	for scanner.Scan() {
+		line := strings.Fields(scanner.Text())
+		n, err := strconv.Atoi(line[0])
+		if err != nil {
+			panic("cannot conver to int")
+		}
+		occ[n] = 1
+		n, err = strconv.Atoi(line[1])
+		if err != nil {
+			panic("cannot conver to int")
+		}
+		l2 = append(l2, n)
+
+	}
+
+	for _, a := range l2 {
+		if occ[a] > 0 {
+			occ[a] += 1
+		}
+	}
+
+	var sum int
+	for k, v := range occ {
+		sum += k * (v - 1)
 	}
 	return sum
 }
