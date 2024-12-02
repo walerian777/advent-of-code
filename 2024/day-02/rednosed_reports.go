@@ -10,6 +10,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 func part1() int {
@@ -76,4 +77,34 @@ func abs(a int) int {
 		return -a
 	}
 	return a
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var safe int
+	for scanner.Scan() {
+		line := strings.Fields(scanner.Text())
+		for i := 0; i < len(line); i++ {
+			subLine := []string{}
+			subLine = append(subLine, line[0:i]...)
+			subLine = append(subLine, line[i+1:]...)
+			if evalLine(subLine) {
+				safe++
+				break
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		panic("scanner error")
+	}
+
+	return safe
 }
