@@ -9,3 +9,7 @@
 ### Day 2
 * Puzzle: [Red-Nosed Reports](https://adventofcode.com/2024/day/2)
 * Solution: [`rednosed_reports.go`](day-02/rednosed_reports.go)
+
+### Day 3
+* Puzzle: [Mull It Over](https://adventofcode.com/2024/day/3)
+* Solution: [`mull_it_over.go`](day-03/mull_it_over.go)
