@@ -94,5 +94,73 @@ func part1() int {
 }
 
 func part2() int {
-	return 0
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	var grid [][]byte
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		grid = append(grid, []byte(line))
+	}
+
+	if err := scanner.Err(); err != nil {
+		panic("scanner error")
+	}
+
+	maxW := len(grid) - 1
+	maxH := len(grid[0]) - 1
+	var sum int
+	for x, row := range grid {
+		for y, c := range row {
+			if c == 'M' {
+				var subsum int
+				// south-east
+				// M 0 M
+				// 0 A 0
+				// S 0 S
+
+				// M 0 S
+				// 0 A 0
+				// M 0 S
+				if x+2 <= maxH && y+2 <= maxW {
+					if grid[x+1][y+1] == 'A' && grid[x+2][y+2] == 'S' {
+						if grid[x][y+2] == 'S' && grid[x+2][y] == 'M' {
+							subsum++
+						} else if grid[x][y+2] == 'M' && grid[x+2][y] == 'S' {
+							subsum++
+						}
+					}
+				}
+				// south-west
+				// S 0 M
+				// 0 A 0
+				// S 0 M
+				if x+2 <= maxH && y-2 >= 0 {
+					if grid[x+1][y-1] == 'A' && grid[x+2][y-2] == 'S' {
+						if grid[x][y-2] == 'S' && grid[x+2][y] == 'M' {
+							subsum++
+						}
+					}
+				}
+				// north-east
+				// S 0 S
+				// 0 A 0
+				// M 0 M
+				if x-2 >= 0 && y+2 <= maxW {
+					if grid[x-1][y+1] == 'A' && grid[x-2][y+2] == 'S' {
+						if grid[x-2][y] == 'S' && grid[x][y+2] == 'M' {
+							subsum++
+						}
+					}
+				}
+				sum += subsum
+			}
+		}
+	}
+
+	return sum
 }
