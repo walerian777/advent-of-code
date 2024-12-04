@@ -13,3 +13,7 @@
 ### Day 3
 * Puzzle: [Mull It Over](https://adventofcode.com/2024/day/3)
 * Solution: [`mull_it_over.go`](day-03/mull_it_over.go)
+
+### Day 4
+* Puzzle: [Ceres Search](https://adventofcode.com/2024/day/4)
+* Solution: [`ceres_search.go`](day-04/ceres_search.go)
