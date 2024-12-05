@@ -17,3 +17,7 @@
 ### Day 4
 * Puzzle: [Ceres Search](https://adventofcode.com/2024/day/4)
 * Solution: [`ceres_search.go`](day-04/ceres_search.go)
+
+### Day 5
+* Puzzle: [Print Queue](https://adventofcode.com/2024/day/5)
+* Solution: [`print_queue.go`](day-05/print_queue.go)
