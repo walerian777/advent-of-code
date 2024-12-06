@@ -37,3 +37,7 @@
 ### Day 9
 * Puzzle: [Mirage Maintenance](https://adventofcode.com/2023/day/9)
 * Solution: [`mirage_maintenance.go`](day-09/mirage_maintenance.go)
+
+### Day 10
+* Puzzle: [Pipe Maze](https://adventofcode.com/2023/day/10)
+* Solution: [`pipe_maze.go`](day-10/pipe_maze.go)
