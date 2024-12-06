@@ -21,3 +21,7 @@
 ### Day 5
 * Puzzle: [Print Queue](https://adventofcode.com/2024/day/5)
 * Solution: [`print_queue.go`](day-05/print_queue.go)
+
+### Day 6
+* Puzzle: [Guard Gallivant](https://adventofcode.com/2024/day/6)
+* Solution: [`guard_gallivant.go`](day-06/guard_gallivant.go)
