@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 )
 
 func main() {
 	fmt.Println(countSteps())
+	fmt.Println(tilesEnclosedByLoop())
 }
 
 type Coord struct {
@@ -76,6 +78,95 @@ func countSteps() int {
 		}
 	}
 	return maxSteps
+}
+
+func tilesEnclosedByLoop() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var maze []string
+	var startX, startY int
+	var startFound bool
+	for scanner.Scan() {
+		line := scanner.Text()
+		if !startFound {
+			idx := strings.IndexByte(line, 'S')
+			if idx != -1 {
+				startY = idx
+				startFound = true
+			} else {
+				startX++
+			}
+		}
+		maze = append(maze, line)
+	}
+	if err := scanner.Err(); err != nil {
+		panic("scanner error")
+	}
+
+	root := NewCoord(startX, startY)
+	queue := []*Coord{root}
+	steps := make(map[Coord]int)
+	steps[*root] = 0
+	var maxSteps int
+
+	for len(queue) > 0 {
+		coord := queue[0]
+		queue = queue[1:]
+
+		ns := neighbors(coord)
+		for dir, n := range ns {
+			if steps[*n] > 0 {
+				continue
+			}
+			if validPipe(dir, maze[n.x][n.y]) {
+				steps[*n] = steps[*coord] + 1
+				if steps[*n] > maxSteps {
+					maxSteps = steps[*n]
+				}
+				queue = append(queue, n)
+			}
+		}
+	}
+	var cs []Coord
+	for c := range steps {
+		cs = append(cs, c)
+	}
+	slices.SortFunc(cs, func(a, b Coord) int {
+		if a.x < b.x {
+			return -1
+		} else if a.x > b.x {
+			return 1
+		}
+		if a.y < b.y {
+			return -1
+		} else if a.y > b.y {
+			return 1
+		}
+		return 0
+	})
+	slices.Compact(cs)
+	return (shoelace(cs) - (maxSteps * 2) + 3) / 2
+}
+
+func shoelace(cs []Coord) int {
+	var sum int
+	for i := 1; i <= len(cs); i++ {
+		c1 := cs[i-1]
+		c2 := cs[0]
+		if i < len(cs) {
+			c2 = cs[i]
+		}
+		sum += ((c1.x * c2.y) - (c1.y * c2.x))
+	}
+	if sum < 0 {
+		sum = -sum
+	}
+	return sum
 }
 
 func neighbors(c *Coord) map[byte]*Coord {
