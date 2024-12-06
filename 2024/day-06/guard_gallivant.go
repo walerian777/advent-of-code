@@ -64,7 +64,62 @@ func part1() int {
 }
 
 func part2() int {
-	return 0
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open input")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var grid [][]byte
+	startPos := &Coord{-1, -1, 'N'}
+
+	for scanner.Scan() {
+		line := []byte(scanner.Text())
+		grid = append(grid, line)
+		if startPos.x != -1 {
+			continue
+		}
+		if y := slices.Index(line, '^'); y > -1 {
+			startPos.x = len(grid) - 1
+			startPos.y = y
+		}
+	}
+
+	maxX := len(grid) - 1
+	maxY := len(grid[0]) - 1
+	var sum int
+
+	for obsX := 0; obsX <= maxX; obsX++ {
+		for obsY := 0; obsY <= maxY; obsY++ {
+			if grid[obsX][obsY] != '.' {
+				continue
+			}
+
+			currPos := &Coord{startPos.x, startPos.y, startPos.dir}
+			visited := make(map[int]byte)
+			visited[currPos.LinearIndex()] = currPos.dir
+			for {
+				newX, newY := currPos.NextCoord()
+				if newX < 0 || newY < 0 || newX > maxX || newY > maxY {
+					break
+				}
+				if (newX == obsX && newY == obsY) || grid[newX][newY] == '#' {
+					currPos.dir = currPos.NextDir()
+				} else if d := visited[linearIndex(newX, newY)]; d == currPos.dir {
+					sum++
+					break
+				} else {
+					currPos.x = newX
+					currPos.y = newY
+					visited[currPos.LinearIndex()] = currPos.dir
+				}
+			}
+		}
+	}
+
+	return sum
 }
 
 func (c *Coord) NextCoord() (int, int) {
@@ -98,5 +153,9 @@ func (c *Coord) NextDir() byte {
 }
 
 func (c *Coord) LinearIndex() int {
-	return c.y*1000 + c.x
+	return linearIndex(c.x, c.y)
+}
+
+func linearIndex(x, y int) int {
+	return y*1000 + x
 }
