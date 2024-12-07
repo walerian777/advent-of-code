@@ -25,3 +25,7 @@
 ### Day 6
 * Puzzle: [Guard Gallivant](https://adventofcode.com/2024/day/6)
 * Solution: [`guard_gallivant.go`](day-06/guard_gallivant.go)
+
+### Day 7
+* Puzzle: [Bridge Repair](https://adventofcode.com/2024/day/7)
+* Solution: [`bridge_repair.go`](day-07/bridge_repair.go)
