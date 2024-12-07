@@ -41,3 +41,7 @@
 ### Day 10
 * Puzzle: [Pipe Maze](https://adventofcode.com/2023/day/10)
 * Solution: [`pipe_maze.go`](day-10/pipe_maze.go)
+
+### Day 11
+* Puzzle: [Cosmic Expansion](https://adventofcode.com/2023/day/11)
+* Solution: [`cosmic_expansion.go`](day-11/cosmic_expansion.go)
