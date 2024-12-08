@@ -29,3 +29,7 @@
 ### Day 7
 * Puzzle: [Bridge Repair](https://adventofcode.com/2024/day/7)
 * Solution: [`bridge_repair.go`](day-07/bridge_repair.go)
+
+### Day 8
+* Puzzle: [Resonant Collinearity](https://adventofcode.com/2024/day/8)
+* Solution: [`resonant_collinearity.go`](day-08/resonant_collinearity.go)
