@@ -33,3 +33,7 @@
 ### Day 8
 * Puzzle: [Resonant Collinearity](https://adventofcode.com/2024/day/8)
 * Solution: [`resonant_collinearity.go`](day-08/resonant_collinearity.go)
+
+### Day 9
+* Puzzle: [Disk Fragmenter](https://adventofcode.com/2024/day/9)
+* Solution: [`disk_fragmenter.go`](day-09/disk_fragmenter.go)
