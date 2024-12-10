@@ -37,3 +37,7 @@
 ### Day 9
 * Puzzle: [Disk Fragmenter](https://adventofcode.com/2024/day/9)
 * Solution: [`disk_fragmenter.go`](day-09/disk_fragmenter.go)
+
+### Day 10
+* Puzzle: [Hoof It](https://adventofcode.com/2024/day/10)
+* Solution: [`hoof_it.go`](day-10/hoof_it.go)
