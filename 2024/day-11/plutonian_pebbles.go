@@ -49,7 +49,44 @@ func part1() int {
 }
 
 func part2() int {
-	return 0
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open input")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	scanner.Scan()
+
+	stones := make(map[int]int)
+	for _, s := range strings.Fields(scanner.Text()) {
+		n, err := strconv.Atoi(s)
+		if err != nil {
+			panic("strconv!")
+		}
+		stones[n]++
+	}
+
+	for range 75 {
+		newStones := make(map[int]int)
+		for s, v := range stones {
+			for _, newS := range evolve(s) {
+				newStones[newS] += v
+			}
+
+		}
+		stones = newStones
+	}
+
+	if err := scanner.Err(); err != nil {
+		panic("scanner error")
+	}
+
+	var sum int
+	for _, v := range stones {
+		sum += v
+	}
+	return sum
 }
 
 func evolve(s int) []int {

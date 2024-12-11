@@ -41,3 +41,7 @@
 ### Day 10
 * Puzzle: [Hoof It](https://adventofcode.com/2024/day/10)
 * Solution: [`hoof_it.go`](day-10/hoof_it.go)
+
+### Day 11
+* Puzzle: [Plutonian Pebbles](https://adventofcode.com/2024/day/11)
+* Solution: [`plutonian_pebbles.go`](day-11/plutonian_pebbles.go)
