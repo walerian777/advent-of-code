@@ -45,3 +45,7 @@
 ### Day 11
 * Puzzle: [Plutonian Pebbles](https://adventofcode.com/2024/day/11)
 * Solution: [`plutonian_pebbles.go`](day-11/plutonian_pebbles.go)
+
+### Day 12
+* Puzzle: [Garden Groups](https://adventofcode.com/2024/day/12)
+* Solution: [`garden_groups.go`](day-12/garden_groups.go)
