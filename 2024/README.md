@@ -49,3 +49,7 @@
 ### Day 12
 * Puzzle: [Garden Groups](https://adventofcode.com/2024/day/12)
 * Solution: [`garden_groups.go`](day-12/garden_groups.go)
+
+### Day 13
+* Puzzle: [Claw Contraption](https://adventofcode.com/2024/day/13)
+* Solution: [`claw_contraption.go`](day-13/claw_contraption.go)
