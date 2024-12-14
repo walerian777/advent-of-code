@@ -53,3 +53,7 @@
 ### Day 13
 * Puzzle: [Claw Contraption](https://adventofcode.com/2024/day/13)
 * Solution: [`claw_contraption.go`](day-13/claw_contraption.go)
+
+### Day 14
+* Puzzle: [Restroom Redoubt](https://adventofcode.com/2024/day/14)
+* Solution: [`restroom_redoubt.go`](day-14/restroom_redoubt.go)
