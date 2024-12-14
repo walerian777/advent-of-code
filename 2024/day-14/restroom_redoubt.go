@@ -86,7 +86,43 @@ func part1() int {
 }
 
 func part2() int {
-	return 0
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	re := regexp.MustCompile(`p=(\d+),(\d+) v=(-{0,1}\d+),(-{0,1}\d+)`)
+	var robots []*Robot
+	for scanner.Scan() {
+		line := scanner.Text()
+		matches := re.FindAllStringSubmatch(line, 1)[0]
+		r := &Robot{MustAtoi(matches[1]), MustAtoi(matches[2]), MustAtoi(matches[3]), MustAtoi(matches[4])}
+		robots = append(robots, r)
+	}
+
+	if err := scanner.Err(); err != nil {
+		panic("scanner error")
+	}
+
+	minDangerLevel := -1
+	minIters := -1
+
+	for iter := 1; iter <= height*width; iter++ {
+		var qs [5]int
+		for _, r := range robots {
+			r.Move()
+			qs[r.Quandrant()]++
+		}
+		dangerLevel := qs[0] * qs[1] * qs[2] * qs[3]
+		if minDangerLevel < 0 || dangerLevel < minDangerLevel {
+			minDangerLevel = dangerLevel
+			minIters = iter
+		}
+	}
+
+	return minIters
 }
 
 func MustAtoi(s string) int {
