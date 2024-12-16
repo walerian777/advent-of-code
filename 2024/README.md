@@ -57,3 +57,7 @@
 ### Day 14
 * Puzzle: [Restroom Redoubt](https://adventofcode.com/2024/day/14)
 * Solution: [`restroom_redoubt.go`](day-14/restroom_redoubt.go)
+
+### Day 15
+* Puzzle: [Warehouse Woes](https://adventofcode.com/2024/day/15)
+* Solution: [`warehouse_woes.go`](day-15/warehouse_woes.go)
