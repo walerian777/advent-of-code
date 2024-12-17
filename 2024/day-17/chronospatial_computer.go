@@ -69,7 +69,7 @@ func (c *Computer) Reset() {
 }
 
 func (c *Computer) adv() {
-	c.a.val = c.a.val / pow(2, c.comboOperand())
+	c.a.val = c.a.val >> c.comboOperand()
 	c.movePointer()
 }
 
@@ -102,12 +102,12 @@ func (c *Computer) out() {
 }
 
 func (c *Computer) bdv() {
-	c.b.val = c.a.val / pow(2, c.comboOperand())
+	c.b.val = c.a.val >> c.comboOperand()
 	c.movePointer()
 }
 
 func (c *Computer) cdv() {
-	c.c.val = c.a.val / pow(2, c.comboOperand())
+	c.c.val = c.a.val >> c.comboOperand()
 	c.movePointer()
 }
 
@@ -144,12 +144,8 @@ func MustAtoi(s string) int {
 	return i
 }
 
-func pow(a, b int) int {
-	res := 1
-	for range b {
-		res *= a
-	}
-	return res
+func decompile(a int) int {
+	return (((((a % 8) ^ 1) ^ 5) ^ (a >> ((a % 8) ^ 1))) % 8)
 }
 
 func part1() string {
@@ -188,6 +184,61 @@ func part1() string {
 	return c.Output()
 }
 
-func part2() string {
-	return ""
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	scanner.Scan()
+	c := &Computer{}
+	c.a = &Register{'a', MustAtoi(scanner.Text()[12:])}
+
+	scanner.Scan()
+	c.b = &Register{'b', MustAtoi(scanner.Text()[12:])}
+
+	scanner.Scan()
+	c.c = &Register{'c', MustAtoi(scanner.Text()[12:])}
+
+	scanner.Scan() // Empty line
+	scanner.Scan()
+	programLine := scanner.Text()[9:]
+
+	if err := scanner.Err(); err != nil {
+		panic("scanner errors")
+	}
+	var program []int
+	for _, c := range strings.Split(programLine, ",") {
+		program = append(program, MustAtoi(c))
+	}
+	c.program = program
+
+	solutions := map[int]bool{0: true}
+	for i := len(program) - 1; i >= 0; i-- {
+		n := program[i]
+		newSolutions := make(map[int]bool)
+		for s := range solutions {
+			for j := range 8 {
+				a := (s << 3) + j
+				if decompile(a) == n {
+					newSolutions[a] = true
+				}
+			}
+
+		}
+		solutions = newSolutions
+
+	}
+
+	res := -1
+	for k := range solutions {
+		if res == -1 || k < res {
+			res = k
+		}
+	}
+
+	return res
 }
