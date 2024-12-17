@@ -61,3 +61,7 @@
 ### Day 15
 * Puzzle: [Warehouse Woes](https://adventofcode.com/2024/day/15)
 * Solution: [`warehouse_woes.go`](day-15/warehouse_woes.go)
+
+### Day 16
+* Puzzle: [Reindeer Maze](https://adventofcode.com/2024/day/16)
+* Solution: [`reindeer_maze.go`](day-16/reindeer_maze.go)
