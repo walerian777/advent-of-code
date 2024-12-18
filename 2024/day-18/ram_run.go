@@ -27,7 +27,7 @@ func MustAtoi(s string) int {
 	return i
 }
 
-func AStar(start, goal Coord, x, y int, grid *[71][71]bool) int {
+func AStar(start, goal Coord, x, y int, grid *[71][71]bool) (int, error) {
 	openSet := map[Coord]bool{start: true}
 	gScore := map[Coord]int{start: 0}
 	fScore := map[Coord]int{start: manhattanDistance(start, goal)}
@@ -43,7 +43,7 @@ func AStar(start, goal Coord, x, y int, grid *[71][71]bool) int {
 			}
 		}
 		if current.x == goal.x && current.y == goal.y {
-			return gScore[current]
+			return gScore[current], nil
 		}
 		delete(openSet, current)
 		for _, nb := range neighbors(current) {
@@ -64,7 +64,7 @@ func AStar(start, goal Coord, x, y int, grid *[71][71]bool) int {
 			}
 		}
 	}
-	panic("failed to A*")
+	return 0, fmt.Errorf("Couldn't find the path")
 }
 
 func neighbors(c Coord) []Coord {
@@ -116,11 +116,44 @@ func part1() int {
 		grid[p.x][p.y] = true
 	}
 
-	s := AStar(Coord{0, 0}, Coord{70, 70}, 70, 70, &grid)
+	s, _ := AStar(Coord{0, 0}, Coord{70, 70}, 70, 70, &grid)
 
 	return s
 }
 
-func part2() int {
-	return 0
+func part2() string {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var positions []Coord
+	for scanner.Scan() {
+		l := strings.SplitN(scanner.Text(), ",", 2)
+		positions = append(positions, Coord{MustAtoi(l[1]), MustAtoi(l[0])})
+	}
+
+	if err := scanner.Err(); err != nil {
+		panic("scanner error")
+	}
+
+	var grid [71][71]bool
+	for i := 0; i < 2048; i++ {
+		p := positions[i]
+		grid[p.x][p.y] = true
+	}
+	for i := 2048; i < len(positions); i++ {
+		p := positions[i]
+		grid[p.x][p.y] = true
+
+		_, err := AStar(Coord{0, 0}, Coord{70, 70}, 70, 70, &grid)
+		if err != nil {
+			return fmt.Sprintf("%d,%d", p.y, p.x)
+		}
+	}
+
+	return "Not found"
 }
