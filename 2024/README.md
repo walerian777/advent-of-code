@@ -65,3 +65,7 @@
 ### Day 16
 * Puzzle: [Reindeer Maze](https://adventofcode.com/2024/day/16)
 * Solution: [`reindeer_maze.go`](day-16/reindeer_maze.go)
+
+### Day 17
+* Puzzle: [Chronospatial Computer](https://adventofcode.com/2024/day/17)
+* Solution: [`chronospatial_computer.go`](day-17/chronospatial_computer.go)
