@@ -70,7 +70,103 @@ func part1() int {
 }
 
 func part2() int {
-	return 0
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var grid [][]byte
+	var nodes []Coord
+	var reindeer Coord
+	var reindeerFound bool
+	var end Coord
+	var endFound bool
+	for i := 0; scanner.Scan(); i++ {
+		line := []byte(scanner.Text())
+		grid = append(grid, line)
+		if !reindeerFound {
+			if j := slices.Index(line, 'S'); j > -1 {
+				reindeer = Coord{i, j, 'e'}
+				reindeerFound = true
+			}
+		}
+		if !endFound {
+			if j := slices.Index(line, 'E'); j > -1 {
+				end = Coord{i, j, 'e'}
+				endFound = true
+			}
+		}
+		for j, _ := range line {
+			nodes = append(nodes, Coord{i, j, 'x'})
+		}
+	}
+	maxX := len(grid) - 1
+	maxY := len(grid[0]) - 1
+
+	path, sc := aStar(reindeer, end, maxX, maxY, &grid, func(a, b Coord) int {
+		d := 1
+		if a.dir != b.dir {
+			d += 1000
+		}
+		return d
+	})
+
+	candidates := make(map[Coord]bool)
+	for _, p := range path {
+		for _, nb := range neighbors(p) {
+			if grid[nb.x][nb.y] == '.' {
+				candidates[nb] = true
+			}
+		}
+	}
+
+	best := make(map[Coord]bool)
+	for n := range candidates {
+		if _, ok := best[Coord{n.x, n.y, 'x'}]; ok {
+			continue
+		}
+		if grid[n.x][n.y] == '#' {
+			continue
+		}
+		if (n.x == reindeer.x && n.y == reindeer.y) || (n.x == end.x && n.y == end.y) {
+			continue
+		}
+		for _, nb := range neighbors(n) {
+			if grid[nb.x][nb.y] == '#' {
+				continue
+			}
+			p1, sc1 := aStar(reindeer, n, maxX, maxY, &grid, func(a, b Coord) int {
+				d := 1
+				if a.dir != b.dir {
+					d += 1000
+				}
+				return d
+			})
+			if sc1+manhattanDistance(n, end) > sc {
+				break
+			}
+			p2, sc2 := aStar(Coord{n.x, n.y, p1[0].dir}, end, maxX, maxY, &grid, func(a, b Coord) int {
+				d := 1
+				if a.dir != b.dir {
+					d += 1000
+				}
+				return d
+			})
+			if sc1+sc2 == sc {
+				for _, k := range p1 {
+					best[Coord{k.x, k.y, 'x'}] = true
+				}
+				for _, k := range p2 {
+					best[Coord{k.x, k.y, 'x'}] = true
+				}
+				break
+			}
+		}
+	}
+
+	return len(best)
 }
 
 type DistFunc func(Coord, Coord) int
