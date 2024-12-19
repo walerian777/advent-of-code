@@ -73,3 +73,7 @@
 ### Day 18
 * Puzzle: [RAM Run](https://adventofcode.com/2024/day/18)
 * Solution: [`ram_run.go`](day-18/ram_run.go)
+
+### Day 19
+* Puzzle: [Linen Layout](https://adventofcode.com/2024/day/19)
+* Solution: [`linen_layout.go`](day-19/linen_layout.go)
