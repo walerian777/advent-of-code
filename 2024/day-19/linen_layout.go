@@ -32,6 +32,24 @@ func IsSubDesignPossible(sub string, patterns *[]string) bool {
 	return false
 }
 
+var sumCache = make(map[string]int)
+
+func SumDesigns(sub string, patterns *[]string) int {
+	if res, ok := sumCache[sub]; ok {
+		return res
+	}
+	var sum int
+	for _, p := range *patterns {
+		if sub == p {
+			sum += 1
+		} else if len(p) <= len(sub) && sub[:len(p)] == p {
+			sum += SumDesigns(sub[len(p):], patterns)
+		}
+	}
+	sumCache[sub] = sum
+	return sum
+}
+
 func part1() int {
 	file, err := os.Open("input")
 	if err != nil {
@@ -60,5 +78,26 @@ func part1() int {
 }
 
 func part2() int {
-	return 0
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	scanner.Scan()
+	patterns := strings.Split(scanner.Text(), ", ")
+
+	var designs []string
+	for scanner.Scan() {
+		designs = append(designs, scanner.Text())
+	}
+
+	var sum int
+	for _, design := range designs {
+		sum += SumDesigns(design, &patterns)
+	}
+
+	return sum
 }
