@@ -77,3 +77,7 @@
 ### Day 19
 * Puzzle: [Linen Layout](https://adventofcode.com/2024/day/19)
 * Solution: [`linen_layout.go`](day-19/linen_layout.go)
+
+### Day 20
+* Puzzle: [Race Condition](https://adventofcode.com/2024/day/20)
+* Solution: [`race_condition.go`](day-20/race_condition.go)
