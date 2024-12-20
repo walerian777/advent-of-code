@@ -2,14 +2,17 @@ package main
 
 import (
 	"bufio"
+	"container/heap"
 	"fmt"
 	"math"
 	"os"
 	"strings"
+	"sync"
 )
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 type Coord struct {
@@ -102,6 +105,65 @@ func AStarCheat(start, goal, cheat Coord, x, y int, grid *[][]byte) ([]Coord, in
 	return nil, 0, fmt.Errorf("Couldn't find the path")
 }
 
+type Item struct {
+	Coord
+	f      int
+	parent *Item
+}
+
+type PriorityQueue []*Item
+
+func (pq PriorityQueue) Len() int           { return len(pq) }
+func (pq PriorityQueue) Less(i, j int) bool { return pq[i].f < pq[j].f }
+func (pq PriorityQueue) Swap(i, j int)      { pq[i], pq[j] = pq[j], pq[i] }
+
+func (pq *PriorityQueue) Push(x interface{}) {
+	*pq = append(*pq, x.(*Item))
+}
+
+func (pq *PriorityQueue) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	*pq = old[0 : n-1]
+	return item
+}
+
+func SimpleAStar(start, goal Coord, x, y int, grid *[][]byte) (int, error) {
+	openSet := &PriorityQueue{}
+	heap.Init(openSet)
+	heap.Push(openSet, &Item{start, 0, nil})
+	openSetM := map[Coord]bool{start: true}
+	gScore := map[Coord]int{start: 0}
+
+	for openSet.Len() > 0 {
+		current := heap.Pop(openSet).(*Item)
+		if current.x == goal.x && current.y == goal.y {
+			return gScore[current.Coord], nil
+		}
+		delete(openSetM, current.Coord)
+		for _, nb := range neighbors(current.Coord) {
+			if nb.x < 0 || nb.y < 0 || nb.x > x || nb.y > y {
+				continue
+			}
+			if (*grid)[nb.x][nb.y] == '#' {
+				continue
+			}
+
+			gScoreTentative := gScore[current.Coord] + 1
+			if gScoreCurrent, ok := gScore[nb]; !ok || gScoreTentative < gScoreCurrent {
+				gScore[nb] = gScoreTentative
+				if _, ok := openSetM[nb]; !ok {
+					openSetM[nb] = true
+					nbI := &Item{Coord{nb.x, nb.y}, gScoreTentative + manhattanDistance(nb, goal), current}
+					heap.Push(openSet, nbI)
+				}
+			}
+		}
+	}
+	return 0, fmt.Errorf("Couldn't find the path")
+}
+
 func reconstructPath(cameFrom map[Coord]Coord, current Coord) []Coord {
 	totalPath := []Coord{current}
 	k := current
@@ -188,6 +250,81 @@ func part1() int {
 		if v >= 100 {
 			sum++
 		}
+	}
+	return sum
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var grid [][]byte
+	var start, end *Coord
+	for i := 0; scanner.Scan(); i++ {
+		line := scanner.Text()
+		grid = append(grid, []byte(line))
+		if start == nil {
+			if j := strings.Index(line, "S"); j > 0 {
+				start = &Coord{i, j}
+			}
+		}
+		if end == nil {
+			if j := strings.Index(line, "E"); j > 0 {
+				end = &Coord{i, j}
+			}
+		}
+	}
+	maxX, maxY := len(grid)-1, len(grid[0])-1
+
+	_, score, _ := AStar(*start, *end, maxX, maxY, &grid)
+	subSums := make(chan int, 200)
+	var wg sync.WaitGroup
+	for i, r := range grid {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			var subSum int
+			for j, c := range r {
+				if c == '#' {
+					continue
+				}
+				if i == end.x && j == end.y {
+					continue
+				}
+				for i2, r2 := range grid {
+					for j2, c2 := range r2 {
+						if c2 == '#' {
+							continue
+						}
+						if abs(i-i2)+abs(j-j2) <= 20 {
+							s1, err := SimpleAStar(*start, Coord{i, j}, maxX, maxY, &grid)
+							if s1 > score || err != nil {
+								continue
+							}
+							s2, err := SimpleAStar(Coord{i2, j2}, *end, maxX, maxY, &grid)
+							if s2 > score || err != nil {
+								continue
+							}
+							if score-(s1+s2+abs(i-i2)+abs(j-j2)) >= 100 {
+								subSum++
+							}
+						}
+					}
+				}
+			}
+			subSums <- subSum
+		}()
+	}
+	wg.Wait()
+	close(subSums)
+
+	var sum int
+	for v := range subSums {
+		sum += v
 	}
 	return sum
 }
