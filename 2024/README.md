@@ -81,3 +81,7 @@
 ### Day 20
 * Puzzle: [Race Condition](https://adventofcode.com/2024/day/20)
 * Solution: [`race_condition.go`](day-20/race_condition.go)
+
+### Day 21
+* Puzzle: [Keypad Conundrum](https://adventofcode.com/2024/day/21)
+* Solution: [`keypad_conundrum.go`](day-21/keypad_conundrum.go)
