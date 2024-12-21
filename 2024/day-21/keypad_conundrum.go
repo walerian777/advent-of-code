@@ -9,6 +9,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 func part1() int {
@@ -27,14 +28,35 @@ func part1() int {
 
 	var sum int
 	for _, pin := range pins {
-		sum += complexity(pin)
+		sum += complexity(pin, 2)
 	}
 	return sum
 }
 
-func complexity(pin string) int {
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var pins []string
+	for scanner.Scan() {
+		pins = append(pins, scanner.Text())
+	}
+
+	var sum int
+	for _, pin := range pins {
+		sum += complexity(pin, 25)
+	}
+	return sum
+}
+
+func complexity(pin string, robots int) int {
 	seq := getSequencesForNum(pin)
-	sequence := minLengthSequence(seq, 2)
+	sequence := minLengthSequence(seq, robots)
 	numericPart := pin[0:3]
 	numeric, err := strconv.Atoi(numericPart)
 	if err != nil {
@@ -79,10 +101,17 @@ var dirKeypad = map[byte][2]int{
 	'>': {2, 0},
 }
 
+var cache = make(map[string]int)
+
 func minLengthSequence(sequence []byte, iter int) int {
+	key := fmt.Sprintf("%v+%d", string(sequence), iter)
+	if cached, ok := cache[key]; ok {
+		return cached
+	}
 	seq := getSequencesForDir(sequence)
 
 	if iter == 1 {
+		cache[key] = len(seq)
 		return len(seq)
 	}
 
@@ -91,6 +120,7 @@ func minLengthSequence(sequence []byte, iter int) int {
 		length := minLengthSequence(s, iter-1)
 		totalLength += length
 	}
+	cache[key] = totalLength
 	return totalLength
 }
 
