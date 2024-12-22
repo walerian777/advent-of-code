@@ -85,3 +85,7 @@
 ### Day 21
 * Puzzle: [Keypad Conundrum](https://adventofcode.com/2024/day/21)
 * Solution: [`keypad_conundrum.go`](day-21/keypad_conundrum.go)
+
+### Day 22
+* Puzzle: [Monkey Market](https://adventofcode.com/2024/day/22)
+* Solution: [`monkey_market.go`](day-22/monkey_market.go)

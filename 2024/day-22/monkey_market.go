@@ -9,6 +9,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 func part1() int {
@@ -35,6 +36,50 @@ func part1() int {
 	}
 
 	return sum
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var secrets []int
+	for scanner.Scan() {
+		secrets = append(secrets, MustAtoi(scanner.Text()))
+	}
+
+	deltas := make(map[[4]int]int)
+	for _, s := range secrets {
+		x := s
+		ps := []int{x}
+		ds := []int{0}
+		for range 2000 {
+			y := NextSecret(x)
+			ps = append(ps, y%10)
+			ds = append(ds, y%10-x%10)
+			x = y
+		}
+
+		localDeltas := make(map[[4]int]int)
+		for i := 1; i+3 < len(ds); i++ {
+			k := [4]int{ds[i], ds[i+1], ds[i+2], ds[i+3]}
+			if _, ok := localDeltas[k]; !ok {
+				localDeltas[k] = ps[i+3]
+				deltas[k] += ps[i+3]
+			}
+		}
+	}
+	maxPrice := -1
+	for _, v := range deltas {
+		if v > maxPrice {
+			maxPrice = v
+		}
+	}
+	return maxPrice
 }
 
 func NextSecret(secret int) int {
