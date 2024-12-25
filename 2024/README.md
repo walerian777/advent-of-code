@@ -97,3 +97,7 @@
 ### Day 24
 * Puzzle: [Crossed Wires](https://adventofcode.com/2024/day/24)
 * Solution: [`crossed_wires.go`](day-24/crossed_wires.go)
+
+### Day 25
+* Puzzle: [Code Chronicle](https://adventofcode.com/2024/day/25)
+* Solution: [`code_chronicle.go`](day-25/code_chronicle.go)
