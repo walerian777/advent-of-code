@@ -90,6 +90,10 @@
 * Puzzle: [Monkey Market](https://adventofcode.com/2024/day/22)
 * Solution: [`monkey_market.go`](day-22/monkey_market.go)
 
-### Day 22
+### Day 23
 * Puzzle: [LAN Party](https://adventofcode.com/2024/day/23)
 * Solution: [`lan_party.go`](day-23/lan_party.go)
+
+### Day 24
+* Puzzle: [Crossed Wires](https://adventofcode.com/2024/day/24)
+* Solution: [`crossed_wires.go`](day-24/crossed_wires.go)
