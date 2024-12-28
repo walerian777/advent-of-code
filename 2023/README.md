@@ -49,3 +49,7 @@
 ### Day 12
 * Puzzle: [Hot Springs](https://adventofcode.com/2023/day/12)
 * Solution: [`hot_springs.go`](day-12/hot_springs.go)
+
+### Day 13
+* Puzzle: [Point of Incidence](https://adventofcode.com/2023/day/13)
+* Solution: [`point_of_incidence.go`](day-13/point_of_incidence.go)
