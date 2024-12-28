@@ -45,3 +45,7 @@
 ### Day 11
 * Puzzle: [Cosmic Expansion](https://adventofcode.com/2023/day/11)
 * Solution: [`cosmic_expansion.go`](day-11/cosmic_expansion.go)
+
+### Day 12
+* Puzzle: [Hot Springs](https://adventofcode.com/2023/day/12)
+* Solution: [`hot_springs.go`](day-12/hot_springs.go)
