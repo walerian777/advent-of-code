@@ -53,3 +53,7 @@
 ### Day 13
 * Puzzle: [Point of Incidence](https://adventofcode.com/2023/day/13)
 * Solution: [`point_of_incidence.go`](day-13/point_of_incidence.go)
+
+### Day 14
+* Puzzle: [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)
+* Solution: [`parabolic_reflector_dish.go`](day-14/parabolic_reflector_dish.go)
