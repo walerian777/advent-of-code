@@ -57,3 +57,7 @@
 ### Day 14
 * Puzzle: [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)
 * Solution: [`parabolic_reflector_dish.go`](day-14/parabolic_reflector_dish.go)
+
+### Day 15
+* Puzzle: [Lens Library](https://adventofcode.com/2023/day/15)
+* Solution: [`lens_library.go`](day-15/lens_library.go)
