@@ -61,3 +61,7 @@
 ### Day 15
 * Puzzle: [Lens Library](https://adventofcode.com/2023/day/15)
 * Solution: [`lens_library.go`](day-15/lens_library.go)
+
+### Day 16
+* Puzzle: [The Floor Will Be Lava](https://adventofcode.com/2023/day/16)
+* Solution: [`the_floor_will_be_lava.go`](day-16/the_floor_will_be_lava.go)
