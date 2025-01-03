@@ -8,6 +8,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 type Beam struct {
@@ -124,4 +125,70 @@ func part1() int {
 		beams = nextBeams
 	}
 	return len(energized)
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	grid := make(map[complex128]byte)
+	curr := 0 + 0i
+	for scanner.Scan() {
+		l := scanner.Text()
+		for j := range l {
+			grid[curr+complex(0, float64(j))] = l[j]
+		}
+		curr += 1 + 0i
+	}
+
+	var maxEnergized int
+
+	for i := float64(0); i <= 109; i++ {
+		for j := float64(0); j <= 109; j++ {
+			var beams []Beam
+			start := complex(i, j)
+			if i == 0 {
+				beams = append(beams, (&Beam{start, 'v'}).NextBeams(grid[start])...)
+			}
+			if i == 109 {
+				beams = append(beams, (&Beam{start, '^'}).NextBeams(grid[start])...)
+			}
+			if j == 0 {
+				beams = append(beams, (&Beam{start, '>'}).NextBeams(grid[start])...)
+			}
+			if j == 109 {
+				beams = append(beams, (&Beam{start, '<'}).NextBeams(grid[start])...)
+			}
+			energized := make(map[complex128]bool)
+			visited := make(map[Beam]bool)
+
+			for len(beams) > 0 {
+				var nextBeams []Beam
+				for _, b := range beams {
+					energized[b.Position] = true
+					if _, ok := visited[b]; ok {
+						continue
+					}
+					visited[b] = true
+
+					nextPos := b.NextPosition()
+					nextTile, found := grid[nextPos]
+					if !found {
+						continue
+					}
+					nextBeams = append(nextBeams, (&Beam{nextPos, b.Direction}).NextBeams(nextTile)...)
+				}
+				beams = nextBeams
+			}
+			if len(energized) > maxEnergized {
+				maxEnergized = len(energized)
+			}
+		}
+	}
+
+	return maxEnergized
 }
