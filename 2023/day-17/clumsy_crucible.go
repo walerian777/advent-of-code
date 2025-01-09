@@ -9,6 +9,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 func part1() int {
@@ -38,7 +39,37 @@ func part1() int {
 
 	source := 0 + 0i
 	target := complex(float64(rows), float64(cols))
-	return FindPath(source, target, grid)
+	return FindPath(source, target, 0, 3, grid)
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	grid := make(map[complex128]int)
+	var rows, cols int
+	for i := 0; scanner.Scan(); i++ {
+		rows = i
+		l := scanner.Text()
+		for j := range l {
+			cols = j
+			v, err := strconv.Atoi(string(l[j]))
+			if err != nil {
+				panic("strconv")
+			}
+
+			grid[complex(float64(i), float64(j))] = v
+		}
+	}
+
+	source := 0 + 0i
+	target := complex(float64(rows), float64(cols))
+	return FindPath(source, target, 4, 10, grid)
 }
 
 type Vertex struct {
@@ -64,7 +95,6 @@ func (ver Vertex) Move(i int) Vertex {
 	return Vertex{v, ver.d}
 }
 
-
 func (ver Vertex) Neighbors() []Vertex {
 	switch ver.d {
 	case byte(0):
@@ -82,8 +112,7 @@ func (ver Vertex) Neighbors() []Vertex {
 	}
 }
 
-
-func FindPath(source, target complex128, grid map[complex128]int) int {
+func FindPath(source, target complex128, minSteps, maxSteps int, grid map[complex128]int) int {
 	h := func(vertex Vertex) int {
 		v := vertex.v
 		return int(real(target)-real(v)+imag(target)-imag(v)) + grid[v]
@@ -111,12 +140,15 @@ func FindPath(source, target complex128, grid map[complex128]int) int {
 
 		for _, next := range curr.Neighbors() {
 			maybeDist := dists[curr]
-			for i := range 3 {
+			for i := range maxSteps {
 				n := next.Move(i)
 				if _, ok := grid[n.v]; !ok {
 					continue
 				}
 				maybeDist += grid[n.v]
+				if i < minSteps-1 {
+					continue
+				}
 				if neighborDist, ok := dists[n]; !ok || maybeDist < neighborDist {
 					dists[n] = maybeDist
 					heurs[n] = maybeDist + h(n)
