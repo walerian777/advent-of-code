@@ -65,3 +65,7 @@
 ### Day 16
 * Puzzle: [The Floor Will Be Lava](https://adventofcode.com/2023/day/16)
 * Solution: [`the_floor_will_be_lava.go`](day-16/the_floor_will_be_lava.go)
+
+### Day 17
+* Puzzle: [Clumsy Crucible](https://adventofcode.com/2023/day/17)
+* Solution: [`clumsy_crucible.go`](day-17/clumsy_crucible.go)
