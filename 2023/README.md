@@ -69,3 +69,7 @@
 ### Day 17
 * Puzzle: [Clumsy Crucible](https://adventofcode.com/2023/day/17)
 * Solution: [`clumsy_crucible.go`](day-17/clumsy_crucible.go)
+
+### Day 18
+* Puzzle: [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)
+* Solution: [`lavaduct_lagoon.go`](day-18/lavaduct_lagoon.go)
