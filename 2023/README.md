@@ -73,3 +73,7 @@
 ### Day 18
 * Puzzle: [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)
 * Solution: [`lavaduct_lagoon.go`](day-18/lavaduct_lagoon.go)
+
+### Day 19
+* Puzzle: [Aplenty](https://adventofcode.com/2023/day/19)
+* Solution: [`aplenty.go`](day-19/aplenty.go)
