@@ -10,6 +10,7 @@ import (
 
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
 
 type Range struct {
@@ -44,6 +45,41 @@ func part1() int {
 		r := toRange(s)
 		for _, id := range r.All() {
 			if isInvalid(id) {
+				sum += id
+			}
+		}
+	}
+
+	return sum
+}
+
+func part2() int {
+	file, err := os.Open("input")
+	if err != nil {
+		panic("cannot open file")
+	}
+
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			panic("cannot close file")
+		}
+	}()
+
+	var sum int
+
+	scanner := bufio.NewScanner(file)
+	scanner.Scan()
+	line := scanner.Text()
+
+	if scanner.Err() != nil {
+		panic("scanner error")
+	}
+
+	for _, s := range strings.Split(line, ",") {
+		r := toRange(s)
+		for _, id := range r.All() {
+			if isTrulyInvalid(id) {
 				sum += id
 			}
 		}
@@ -91,4 +127,34 @@ func isInvalid(id int) bool {
 	}
 
 	return true
+}
+
+func isTrulyInvalid(id int) bool {
+	strId := strconv.Itoa(id)
+	strLen := len(strId)
+
+	minPatternLen := 1
+	maxPatternLen := strLen / 2
+
+	for l := minPatternLen; l <= maxPatternLen; l++ {
+		if strLen%l != 0 {
+			continue
+		}
+		invalid := true
+	inner:
+		for i := 0; i < l; i++ {
+			j := 1
+			for j*l < strLen {
+				if strId[i] != strId[i+j*l] {
+					invalid = false
+					break inner
+				}
+				j++
+			}
+		}
+		if invalid {
+			return true
+		}
+	}
+	return false
 }
