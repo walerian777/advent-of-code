@@ -13,3 +13,7 @@
 ### Day 3
 * Puzzle: [Lobby](https://adventofcode.com/2025/day/3)
 * Solution: [`lobby.go`](day-03/lobby.go)
+
+### Day 4
+* Puzzle: [Printing Department](https://adventofcode.com/2025/day/4)
+* Solution: [`printing_department.go`](day-04/printing_department.go)
