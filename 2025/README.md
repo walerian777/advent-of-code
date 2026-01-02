@@ -17,3 +17,7 @@
 ### Day 4
 * Puzzle: [Printing Department](https://adventofcode.com/2025/day/4)
 * Solution: [`printing_department.go`](day-04/printing_department.go)
+
+### Day 5
+* Puzzle: [Cafeteria](https://adventofcode.com/2025/day/5)
+* Solution: [`cafeteria.go`](day-05/cafeteria.go)
