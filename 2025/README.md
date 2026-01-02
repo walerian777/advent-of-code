@@ -21,3 +21,7 @@
 ### Day 5
 * Puzzle: [Cafeteria](https://adventofcode.com/2025/day/5)
 * Solution: [`cafeteria.go`](day-05/cafeteria.go)
+
+### Day 6
+* Puzzle: [Trash Compactor](https://adventofcode.com/2025/day/6)
+* Solution: [`trash_compactor.go`](day-06/trash_compactor.go)
