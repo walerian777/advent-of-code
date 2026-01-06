@@ -25,3 +25,7 @@
 ### Day 6
 * Puzzle: [Trash Compactor](https://adventofcode.com/2025/day/6)
 * Solution: [`trash_compactor.go`](day-06/trash_compactor.go)
+
+### Day 7
+* Puzzle: [Laboratories](https://adventofcode.com/2025/day/7)
+* Solution: [`laboratories.go`](day-07/laboratories.go)
