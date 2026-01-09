@@ -29,3 +29,7 @@
 ### Day 7
 * Puzzle: [Laboratories](https://adventofcode.com/2025/day/7)
 * Solution: [`laboratories.go`](day-07/laboratories.go)
+
+### Day 8
+* Puzzle: [Playground](https://adventofcode.com/2025/day/8)
+* Solution: [`playground.go`](day-08/playground.go)
